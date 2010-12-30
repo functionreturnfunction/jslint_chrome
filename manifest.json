@@ -1,0 +1,12 @@
+{
+  "name": "JSLint for Chrome",
+  "version": "1.0",
+  "description": "Incorporates Douglas Crockford's JSLint for use directly in Google Chrome.",
+  "browser_action": {
+    "default_icon": "icon.png"
+  },
+  "permissions": [
+    "tabs", "http://*/*"
+  ],
+  "background_page": "main.html"
+}
