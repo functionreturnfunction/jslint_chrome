@@ -31,6 +31,17 @@ OUTPUT_FILES = {
   :manifest => "#{OUTPUT_DIRECTORY}/#{FILES[:manifest]}"
 }
 
+def build_script_file_with_listeners name, namespace = ''
+  open(OUTPUT_FILES[name], 'w') do |outfile|
+    outfile.puts '(function(){'
+    open(SOURCE_FILES[name]) do |infile|
+      infile.each {|line| outfile.puts(line) }
+    end
+    outfile.puts "#{namespace}initListeners();"
+    outfile.puts '})();'
+  end
+end
+
 require 'rake/clean'
 
 CLOBBER.include OUTPUT_DIRECTORY
@@ -38,18 +49,15 @@ CLOBBER.include OUTPUT_DIRECTORY
 directory OUTPUT_DIRECTORY
 
 file OUTPUT_FILES[:content] => [OUTPUT_DIRECTORY] do
-  open(OUTPUT_FILES[:content], 'w') do |outfile|
-    outfile.puts '(function(){'
-    open(SOURCE_FILES[:content]) do |infile|
-      infile.each {|line| outfile.puts(line) }
-    end
-    outfile.puts 'initListener();'
-    outfile.puts '})();'
-  end
+  build_script_file_with_listeners :content
+end
+
+file OUTPUT_FILES[:dom] => [OUTPUT_DIRECTORY] do
+  build_script_file_with_listeners :dom, 'DOM.'
 end
 
 OUTPUT_FILES.each do |f, name|
-  next if f == :content
+  next if [:content, :dom].include? f
   file name => [OUTPUT_DIRECTORY] do
     cp SOURCE_FILES[f], name
   end

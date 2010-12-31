@@ -1,26 +1,27 @@
+loadScriptDynamically('../../src/dom.js');
 module('DOM Script');
 
-test('loading script adds a listener for the onClicked event of the browserAction which will send a "getScripts" request to the current tab', function() {
+test('.initListeners adds getScripts as an event listener for the browserAction onClicked event', function() {
   jack(function() {
-    var tab = {
-      id: 1234
-    };
-    var theCallback;
-
     jack.expect('chrome.browserAction.onClicked.addListener')
-      .mock(function(fn) {
-        theCallback = fn;
-      });
-    
-    loadScriptDynamically('../../src/dom.js');
+      .mock(noop)
+      .withArguments(DOM.getScripts);
 
+    DOM.initListeners();
+  });
+});
+
+test('.getScripts sends a request to the given tab with the "getScripts" action and getScriptsCallback', function() {
+  var tab = {id: 1234};
+
+  jack(function() {
     jack.expect('chrome.tabs.sendRequest')
       .mock(function(tabId, request, cb) {
-        equals(tabId, tab.id);
-        equals(request.action, 'getScripts');
-        same(cb, callback);
+        equals(tab.id, tabId);
+        equals('getScripts', request.action);
+        same(DOM.getScriptsCallback, cb);
       });
 
-    theCallback(tab);
+    DOM.getScripts(tab);
   });
 });

@@ -28,6 +28,6 @@ var getPageScripts = function() {
   return strings;
 };
 
-var initListener = function() {
+var initListeners = function() {
   chrome.extension.onRequest.addListener(listenerCallback);
 };
