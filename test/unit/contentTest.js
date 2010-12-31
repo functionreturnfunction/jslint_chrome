@@ -68,3 +68,13 @@ test('getPageScripts returns array of src attributes for all scripts in the curr
   same(scripts[0].src, retVal[1]);
   same(scripts[1].src, retVal[0]);
 });
+
+test('initListener adds listenerCallback as an event handler for chrome.extension.onRequest', function() {
+  jack(function() {
+    jack.expect('chrome.extension.onRequest.addListener')
+      .mock(noop)
+      .withArguments(listenerCallback);
+
+    initListener();
+  });
+});
