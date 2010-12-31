@@ -1,18 +1,18 @@
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+var listenerCallback = function(request, sender, sendResponse) {
   switch (request.action) {
-  case "getDom" :
+  case 'getDom' :
     // psyche, chrome throws an error anytime you try to return a dom object
     break;
-  case "getScripts" : 
+  case 'getScripts' : 
     sendResponse({scripts: getPageScripts()});
     break;
-  case "consoleLog" :
+  case 'consoleLog' :
     console.log(request.data);
     break;
   default:
     sendResponse({}); 
   }
-});
+};
 
 var getPageScripts = function() {
   var scripts = document.getElementsByTagName('script');
@@ -31,4 +31,8 @@ var getPageScripts = function() {
   }
   
   return strings;
+};
+
+var initListener = function() {
+  chrome.extension.onRequest.addListener(listenerCallback);
 };

@@ -1,22 +1,24 @@
+loadScriptDynamically('../../src/content.js');
 module('Content Script');
 
-test('adds an event listener for onRequest which will respond using the specified callback', function() {
+test('listenerCallback sends response with result from getPageScripts when request action is "getScripts"', function() {
+  var request = {
+    action: 'getScripts'
+  };
+  var pageScripts = new Object();
+  var sendResponseCalled = false;
+  var sendResponse = function(response) {
+    sendResponseCalled = true;
+    same(pageScripts, response.scripts);
+  };
+
   jack(function() {
-    var request = {
-      action: 'getScripts'
-    };
-    var callbackCalled = false;
-    var callback = function(arg) {
-      callbackCalled = true;
-    };
+    jack.expect('getPageScripts')
+      .mock(noop)
+      .returnValue(pageScripts);
 
-    jack.expect('chrome.extension.onRequest.addListener')
-      .mock(function(fn) {
-        fn(request, null, callback);
-      });
-
-    loadScriptDynamically('../../src/content.js');
-
-    ok(callbackCalled);
+    listenerCallback(request, null, sendResponse);
   });
+  
+  ok(sendResponseCalled);
 });
