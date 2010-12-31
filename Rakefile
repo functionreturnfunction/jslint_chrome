@@ -1,3 +1,6 @@
+LIBRARIES = {
+  :jslint => 'fulljslint.js'
+}
 FILES = {
   :background => 'background.html',
   :icon => 'icon.png',
@@ -9,11 +12,13 @@ SCRIPTS = {
 }
 CONTENT_DIRECTORY = 'content'
 SOURCE_DIRECTORY = 'src'
+LIBRARY_DIRECTORY = 'lib'
 SOURCE_FILES = {
   :background => "#{CONTENT_DIRECTORY}/#{FILES[:background]}",
   :content => "#{SOURCE_DIRECTORY}/#{SCRIPTS[:content]}",
   :dom => "#{SOURCE_DIRECTORY}/#{SCRIPTS[:dom]}",
   :icon => "#{CONTENT_DIRECTORY}/#{FILES[:icon]}",
+  :jslint => "#{LIBRARY_DIRECTORY}/#{LIBRARIES[:jslint]}",
   :manifest => "#{CONTENT_DIRECTORY}/#{FILES[:manifest]}"
 }
 OUTPUT_DIRECTORY = 'output'
@@ -22,6 +27,7 @@ OUTPUT_FILES = {
   :content => "#{OUTPUT_DIRECTORY}/#{SCRIPTS[:content]}",
   :dom => "#{OUTPUT_DIRECTORY}/#{SCRIPTS[:dom]}",
   :icon => "#{OUTPUT_DIRECTORY}/#{FILES[:icon]}",
+  :jslint => "#{OUTPUT_DIRECTORY}/#{LIBRARIES[:jslint]}",
   :manifest => "#{OUTPUT_DIRECTORY}/#{FILES[:manifest]}"
 }
 
