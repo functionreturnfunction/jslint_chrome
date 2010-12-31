@@ -2,10 +2,10 @@
   "name": "JSLint for Chrome",
   "version": "1.0",
   "description": "Implementation of Douglas Crockford's JSLint for script validation from within Google Chrome.",
-  "background_page" : "content/background.html",
+  "background_page" : "background.html",
   "browser_action": {
     "default_title" : "Get Page Scripts",
-    "default_icon": "content/icon.png"
+    "default_icon": "icon.png"
   },
   "permissions": [
     "tabs", "http://*/*", "https://*/*"
@@ -13,7 +13,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["src/content.js"]
+      "js": ["content.js"]
     }
   ]
 }
