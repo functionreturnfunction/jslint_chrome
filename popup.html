@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>JSLint for Chrome</title>
+  </head>
+  <body>
+    <h2>JSLint for Chrome</h2>
+    <script type="text/javascript">
+//      chrome.windows.getCurrent(function(win) {
+//        alert(win.title);
+//      });
+
+      chrome.windows.getLastFocused(function(win) {
+        alert(win.title);
+      });
+    </script>
+  </body>
+</html>
