@@ -1,12 +1,12 @@
 var listenerCallback = function(request, sender, sendResponse) {
   switch (request.action) {
-  case 'getDom' :
+  case 'getDom':
     // psyche, chrome throws an error anytime you try to return a dom object
     break;
-  case 'getScripts' : 
+  case 'getScripts': 
     sendResponse({scripts: getPageScripts()});
     break;
-  case 'consoleLog' :
+  case 'consoleLog':
     console.log(request.data);
     break;
   default:
@@ -15,18 +15,13 @@ var listenerCallback = function(request, sender, sendResponse) {
 };
 
 var getPageScripts = function() {
-  var scripts = document.getElementsByTagName('script');
-  var strings = [];
+  var scripts = document.getElementsByTagName('script'),
+    strings = [], src;
   
-  for (var x=0; x<scripts.length; ++x) {
-    var src = scripts[x].getAttribute('src');
-    
+  for (var i = scripts.length - 1; i >= 0; --i) {
+    src = scripts[i].getAttribute('src');
     if (src) {
-      // do ajax call to get script text 
-      // ...
-      // strings.push(response.responseText) 
-    } else {
-      strings.push(scripts[x].innerHTML);
+      strings.push(src);
     }
   }
   
