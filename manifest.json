@@ -1,7 +1,7 @@
 {
-  "name": "My First Extension",
+  "name": "JSLint for Chrome",
   "version": "1.0",
-  "description": "The first extension that I made.",
+  "description": "Implementation of Douglas Crockford's JSLint for script validation from within Google Chrome.",
   "background_page" : "content/background.html",
   "browser_action": {
     "default_title" : "Get Page Scripts",
