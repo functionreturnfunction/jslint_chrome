@@ -1,34 +1,13 @@
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-  switch (request.action) {
-    case "getDom" :
-      // psyche, chrome throws an error anytime you try to return a dom object
-      break;
-    case "getScripts" : 
-      sendResponse({scripts: getPageScripts() });
-      break;
-    case "consoleLog" :
-      console.log(request.data);
-      break;
-    default:
-      sendResponse({}); 
-  }
-});
+var tabid;
 
-var getPageScripts = function() {
-  var scripts = document.getElementsByTagName('script');
-  var strings = [];
+var callback = function(response) {
+  var scripts = response.scripts;
   
-  for (var x=0; x<scripts.length; ++x) {
-    var src = scripts[x].getAttribute('src');
-  
-    if (src) {
-      // do ajax call to get script text 
-      // ...
-      // strings.push(response.responseText) 
-    } else {
-      strings.push(scripts[x].innerHTML);
-    }
-  }
-  
-  return strings;
+  // if you want to log something, send a message to dom.js which lives on the tab page
+  chrome.tabs.sendRequest(tabid, {action: "consoleLog", data: scripts}, callback);
 }
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+  tabid = tab.id;
+  chrome.tabs.sendRequest(tab.id, {action: "getScripts"}, callback);
+});
