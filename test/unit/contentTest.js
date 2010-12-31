@@ -8,3 +8,7 @@ function loadContentScript() {
 }
 
 module('Content Script');
+
+test('adds an event listener for onRequest which will respond using the specified callback', function() {
+  
+});
