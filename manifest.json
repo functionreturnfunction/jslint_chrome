@@ -1,12 +1,19 @@
 {
-  "name": "JSLint for Chrome",
+  "name": "My First Extension",
   "version": "1.0",
-  "description": "Incorporates Douglas Crockford's JSLint for use directly in Google Chrome.",
+  "description": "The first extension that I made.",
+  "background_page" : "background.html",
   "browser_action": {
+	"default_title" : "Get Page Scripts",
     "default_icon": "icon.png"
   },
   "permissions": [
-    "tabs", "http://*/*"
+    "tabs", "http://*/*", "https://*/*"
   ],
-  "background_page": "main.html"
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["dom.js"]
+    }
+  ]
 }
