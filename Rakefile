@@ -32,6 +32,7 @@ OUTPUT_FILES = {
 }
 
 def build_script_file_with_listeners name, namespace = ''
+  puts "building #{OUTPUT_FILES[name]}"
   open(OUTPUT_FILES[name], 'w') do |outfile|
     outfile.puts '(function(){'
     open(SOURCE_FILES[name]) do |infile|
