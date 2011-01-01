@@ -5,9 +5,6 @@ var DOM = {
 
   getScriptsCallback: function(response) {
     DOM.renderScriptUrls(response.scripts);
-    // if you want to log something, send a message to content.js which lives on
-    // the tab page
-    // chrome.tabs.sendRequest(DOM.tabId, {action: 'consoleLog', data: scripts}, null);
   },
 
   renderScriptUrls: function(urls) {
@@ -21,11 +18,11 @@ var DOM = {
   },
 
   getScripts: function(tab) {
-    DOM.tabId = tab.id;
-    chrome.tabs.sendRequest(DOM.tabId, {action: 'getScripts'}, DOM.getScriptsCallback);
+    chrome.tabs.sendRequest(
+      (DOM.tabId = tab.id), {action: 'getScripts'}, DOM.getScriptsCallback);
   },
 
-  initListeners: function() {
+  initialize: function() {
     chrome.tabs.getSelected(null, DOM.getScripts);
   }
 };

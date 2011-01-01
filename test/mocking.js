@@ -10,6 +10,7 @@ var chrome = {
     }
   },
   tabs: {
-    sendRequest: noop
+    sendRequest: noop,
+    getSelected: noop
   }
 };

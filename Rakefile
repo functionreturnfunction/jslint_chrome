@@ -34,14 +34,14 @@ OUTPUT_FILES = {
   :manifest => "#{OUTPUT_DIRECTORY}/#{FILES[:manifest]}"
 }
 
-def build_script_file_with_listeners name, namespace = ''
+def build_script_file_with_listeners name, extra_call = nil
   puts "building #{OUTPUT_FILES[name]}"
   open(OUTPUT_FILES[name], 'w') do |outfile|
     outfile.puts '(function(){'
     open(SOURCE_FILES[name]) do |infile|
       infile.each {|line| outfile.puts(line) }
     end
-    outfile.puts "#{namespace}initListeners();"
+    outfile.puts extra_call if !extra_call.nil?
     outfile.puts '})();'
   end
 end
@@ -53,11 +53,11 @@ CLOBBER.include OUTPUT_DIRECTORY
 directory OUTPUT_DIRECTORY
 
 file OUTPUT_FILES[:content] => [OUTPUT_DIRECTORY] do
-  build_script_file_with_listeners :content
+  build_script_file_with_listeners :content, 'initialize();'
 end
 
 file OUTPUT_FILES[:popup_js] => [OUTPUT_DIRECTORY] do
-  build_script_file_with_listeners :popup_js, 'DOM.'
+  build_script_file_with_listeners :popup_js, 'DOM.initialize();'
 end
 
 OUTPUT_FILES.each do |f, name|
