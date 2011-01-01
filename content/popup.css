@@ -1,0 +1,5 @@
+div.main_div {
+  height: 70px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}

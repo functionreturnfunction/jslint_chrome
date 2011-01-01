@@ -2,30 +2,33 @@ LIBRARIES = {
   :jslint => 'fulljslint.js'
 }
 FILES = {
-  :background => 'background.html',
   :icon => 'icon.png',
-  :manifest => 'manifest.json'
+  :manifest => 'manifest.json',
+  :popup => 'popup.html',
+  :popup_css => 'popup.css'
 }
 SCRIPTS = {
   :content => 'content.js',
-  :dom => 'dom.js'
+  :popup_js => 'popup.js'
 }
 CONTENT_DIRECTORY = 'content'
 SOURCE_DIRECTORY = 'src'
 LIBRARY_DIRECTORY = 'lib'
 SOURCE_FILES = {
-  :background => "#{CONTENT_DIRECTORY}/#{FILES[:background]}",
   :content => "#{SOURCE_DIRECTORY}/#{SCRIPTS[:content]}",
-  :dom => "#{SOURCE_DIRECTORY}/#{SCRIPTS[:dom]}",
+  :popup => "#{CONTENT_DIRECTORY}/#{FILES[:popup]}",
+  :popup_css => "#{CONTENT_DIRECTORY}/#{FILES[:popup_css]}",
+  :popup_js => "#{SOURCE_DIRECTORY}/#{SCRIPTS[:popup_js]}",
   :icon => "#{CONTENT_DIRECTORY}/#{FILES[:icon]}",
   :jslint => "#{LIBRARY_DIRECTORY}/#{LIBRARIES[:jslint]}",
   :manifest => "#{CONTENT_DIRECTORY}/#{FILES[:manifest]}"
 }
 OUTPUT_DIRECTORY = 'output'
 OUTPUT_FILES = {
-  :background => "#{OUTPUT_DIRECTORY}/#{FILES[:background]}",
   :content => "#{OUTPUT_DIRECTORY}/#{SCRIPTS[:content]}",
-  :dom => "#{OUTPUT_DIRECTORY}/#{SCRIPTS[:dom]}",
+  :popup => "#{OUTPUT_DIRECTORY}/#{FILES[:popup]}",
+  :popup_css => "#{OUTPUT_DIRECTORY}/#{FILES[:popup_css]}",
+  :popup_js => "#{OUTPUT_DIRECTORY}/#{SCRIPTS[:popup_js]}",
   :icon => "#{OUTPUT_DIRECTORY}/#{FILES[:icon]}",
   :jslint => "#{OUTPUT_DIRECTORY}/#{LIBRARIES[:jslint]}",
   :manifest => "#{OUTPUT_DIRECTORY}/#{FILES[:manifest]}"
@@ -53,12 +56,12 @@ file OUTPUT_FILES[:content] => [OUTPUT_DIRECTORY] do
   build_script_file_with_listeners :content
 end
 
-file OUTPUT_FILES[:dom] => [OUTPUT_DIRECTORY] do
-  build_script_file_with_listeners :dom, 'DOM.'
+file OUTPUT_FILES[:popup_js] => [OUTPUT_DIRECTORY] do
+  build_script_file_with_listeners :popup_js, 'DOM.'
 end
 
 OUTPUT_FILES.each do |f, name|
-  next if [:content, :dom].include? f
+  next if [:content, :popup_js].include? f
   file name => [OUTPUT_DIRECTORY] do
     cp SOURCE_FILES[f], name
   end
