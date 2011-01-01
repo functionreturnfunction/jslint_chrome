@@ -11,7 +11,7 @@ test('.initListeners adds getScripts as an event listener for the browserAction 
   });
 });
 
-test('.getScripts sends a request to the given tab with the "getScripts" action and getScriptsCallback', function() {
+test('.getScripts sends a request to the given tab with the "getScripts" action and getScriptsCallback, and sets the tabId', function() {
   var tab = {id: 1234};
 
   jack(function() {
@@ -23,5 +23,7 @@ test('.getScripts sends a request to the given tab with the "getScripts" action 
       });
 
     DOM.getScripts(tab);
+
+    equals(tab.id, DOM.tabId)
   });
 });
