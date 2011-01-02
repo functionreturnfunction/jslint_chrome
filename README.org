@@ -1,6 +1,4 @@
 #+TITLE: The JSLint extension for Google Chrome
-* THIS EXTENSION IS A WORK IN PROGRESS, AND DOES NOT YET FUNCTION.
-
 * License
   Copyright 2011 Jason Duncan
 
