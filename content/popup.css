@@ -22,3 +22,7 @@ div.main_div {
   overflow-x: auto;
   overflow-y: hidden;
 }
+
+div#results {
+  display: none;
+}

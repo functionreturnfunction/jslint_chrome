@@ -18,11 +18,16 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 var DOM = {
+  DIV_RESULTS: 'results',
   DDL_SCRIPTS: 'script_urls',
   BTN_JSLINT: 'jslint',
   BTN_CANCEL: 'cancel',
 
   tabId: null,
+
+  createScriptRequest: function() {
+    return new XMLHttpRequest();
+  },
 
   getScriptsCallback: function(response) {
     DOM.renderScriptUrls(response.scripts);
@@ -41,6 +46,49 @@ var DOM = {
   getScripts: function(tab) {
     chrome.tabs.sendRequest(
       (DOM.tabId = tab.id), {action: 'getScripts'}, DOM.getScriptsCallback);
+  },
+
+  getChosenScriptUrl: function() {
+    var ddlScripts = document.getElementById(DOM.DDL_SCRIPTS);
+    return ddlScripts.options[ddlScripts.selectedIndex].value;
+  },
+
+  gatherScriptSource: function(url) {
+    var request = DOM.createScriptRequest();
+    request.open('GET', url, false);
+    request.send(null);
+    return request.responseText;
+  },
+
+  formatError: function(error) {
+    var p = document.createElement('p');
+    p.innerHTML = 'Problem at line ' + error.line + ', character ' +
+      error.character + '<br />Source: ' + error.evidence + '<br />' +
+      'Problem: ' + error.reason + '<br />';
+    return p;
+  },
+
+  renderJSLintResults: function(result) {
+    if (result === true) {
+      return;
+    }
+
+    var results = document.getElementById(DOM.DIV_RESULTS), error;
+    results.style.display = 'block';
+    for (var i = 0, len = JSLINT.errors.length; i < len; ++i) {
+      error = JSLINT.errors[i];
+      if (error != null) {
+        results.appendChild(
+          DOM.formatError(error));
+      }
+    }
+  },
+
+  btnJSLint_Click: function() {
+    DOM.renderJSLintResults(
+      JSLINT(
+        DOM.gatherScriptSource(
+          DOM.getChosenScriptUrl())));
   },
 
   initialize: function() {

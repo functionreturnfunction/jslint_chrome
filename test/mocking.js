@@ -14,3 +14,5 @@ var chrome = {
     getSelected: noop
   }
 };
+
+var JSLINT = noop;

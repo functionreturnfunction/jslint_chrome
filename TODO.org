@@ -1,0 +1,9 @@
+* TODO Create a real icon!!!
+* TODO Figure out why some errors are null
+* TODO Either filter script urls that don't start with /^https?/, or prepend if possible
+  Not sure why those show up either, are they parts of extensions, or scripts
+  that aren't fully qualified?
+* TODO Decide upon the best format for error output in the popup
+* TODO Rename dom.js to something more appropriate
+* TODO Implement some level of functional or integration testing
+* TODO General UI niceness, fix layout, css, etc.
