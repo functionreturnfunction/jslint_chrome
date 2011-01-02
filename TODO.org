@@ -4,7 +4,7 @@
   Not sure why those show up either, are they parts of extensions, or scripts
   that aren't fully qualified?
 * TODO Decide upon the best format for error output in the popup
-* TODO Rename dom.js to something more appropriate
+* TODO Determine if the closures are necessary
 * TODO Implement some level of functional or integration testing
 * TODO General UI niceness, fix layout, css, etc.
 * TODO Determine best way to build the extension and minify/pack the js files (retaining header/copyright info)
