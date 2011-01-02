@@ -2,6 +2,7 @@ LIBRARIES = {
   :jslint => 'fulljslint.js'
 }
 FILES = {
+  :copying => 'COPYING',
   :icon => 'icon.png',
   :manifest => 'manifest.json',
   :popup => 'popup.html',
@@ -16,6 +17,7 @@ SOURCE_DIRECTORY = 'src'
 LIBRARY_DIRECTORY = 'lib'
 SOURCE_FILES = {
   :content => "#{SOURCE_DIRECTORY}/#{SCRIPTS[:content]}",
+  :copying => FILES[:copying],
   :popup => "#{CONTENT_DIRECTORY}/#{FILES[:popup]}",
   :popup_css => "#{CONTENT_DIRECTORY}/#{FILES[:popup_css]}",
   :popup_js => "#{SOURCE_DIRECTORY}/#{SCRIPTS[:popup_js]}",
@@ -25,6 +27,7 @@ SOURCE_FILES = {
 }
 OUTPUT_DIRECTORY = 'output'
 OUTPUT_FILES = {
+  :copying => "#{OUTPUT_DIRECTORY}/#{FILES[:copying]}",
   :content => "#{OUTPUT_DIRECTORY}/#{SCRIPTS[:content]}",
   :popup => "#{OUTPUT_DIRECTORY}/#{FILES[:popup]}",
   :popup_css => "#{OUTPUT_DIRECTORY}/#{FILES[:popup_css]}",

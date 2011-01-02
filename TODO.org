@@ -7,3 +7,4 @@
 * TODO Rename dom.js to something more appropriate
 * TODO Implement some level of functional or integration testing
 * TODO General UI niceness, fix layout, css, etc.
+* TODO Determine best way to build the extension and minify/pack the js files (retaining header/copyright info)
