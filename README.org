@@ -22,7 +22,7 @@
   This extension adds the ability to run any scripts loaded into the current
   page through Douglas Crockford's JSLint implementation.
 
-* Installation/Usage
+* Installation/Usage/Hacking
 ** Dependencies
    There are no external dependencies for the extension itself, but building it
    requires ruby and rake.
@@ -48,3 +48,15 @@
    list of all the javascript files loaded in the current page.  Choose the file
    to be examined in the list, and click the "JSLint" button.  Results will be
    shown in the popup.
+
+** Hacking
+   The =output/= directory is only for the built version of the extension.  When
+   editing files in the project, you'll want to edit them in their respective
+   source locations.  All javascripts go in =src/=, all static content (images,
+   html files, css files, the manifest, etc.) belongs in =content/=.  When you're
+   ready to do a live test of your changes, simply rebuild and then reload the
+   extension in Chrome using the steps outlined above.
+
+   All scripts in the project are covered 100% by unit tests, because the code was
+   written test first.  To run the tests, simply point Chrome to the url
+   =file:///path/to/project/location/jslint_chrome/test/unit/tests.html=
