@@ -36,12 +36,13 @@
 ** Installation
    After building, the extension can be installed as follows (as of Chrome
    version 10.0.612.1 dev):
-*** From Chrome, click the tool menu button
-*** Click Tools -> Extensions
-*** Click the plus sign "+" next to "Developer Mode"
-    This step is not necessary if Developer Mode is already open
-*** Click the "Load Unpacked Extension" button
-*** Navigate to the =output/= directory under the project checkout directory and click the "Open" button
+1) From Chrome, click the tool menu button.
+2) Click Tools -> Extensions.
+3) Click the plus sign "+" next to "Developer Mode".  This step is not necessary
+   if Developer Mode is already open.
+4) Click the "Load Unpacked Extension" button.
+5) Navigate to the =output/= directory under the project checkout directory and
+   click the "Open" button.
 
 ** Usage
    Installing the extension as described above will add a button next to the url
