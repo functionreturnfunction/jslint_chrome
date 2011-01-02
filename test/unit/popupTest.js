@@ -225,3 +225,13 @@ test('.formatError returns a new &lt;p&gt; element with the provided error infor
     equals(expected, result.innerHTML);
   });
 });
+
+test('.fixRelativeUrl determines and returns the fully-qualified path for the given url', function() {
+  var relativeUrl = '/path/to/someScript.js';
+  var baseUrl = 'http://www.somesite.com';
+  var expected = relativeUrl + baseUrl;
+
+  jack(function() {
+    
+  });
+});
