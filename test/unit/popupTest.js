@@ -26,8 +26,11 @@ test('.initialize uses the chrome.tabs api to call .getScripts with the current 
   });
 });
 
-test('.getScripts sends a request to the given tab with the "getScripts" action and getScriptsCallback, and sets the tabId', function() {
-  var tab = {id: 1234};
+test('.getScripts sends a request to the given tab with the "getScripts" action and getScriptsCallback, and sets the tabId and tabUrl', function() {
+  var tab = {
+    id: 1234,
+    url: 'this is the tab url'
+  };
 
   jack(function() {
     jack.expect('chrome.tabs.sendRequest')
@@ -40,6 +43,7 @@ test('.getScripts sends a request to the given tab with the "getScripts" action 
     DOM.getScripts(tab);
 
     equals(tab.id, DOM.tabId)
+    equals(tab.url, DOM.tabUrl);
   });
 });
 
@@ -57,7 +61,7 @@ test('.getScriptsCallback calls .renderScriptUrls with the scripts attribute of 
   });
 });
 
-test('.renderScriptUrls creates option elements and appends them to the scripts select for each script url passed in', function() {
+test('.renderScriptUrls creates option elements and appends them to the scripts select for each script url passed in, fixing relative urls along the way', function() {
   var option = new Object();
   var scripts = ['foo', 'bar', 'baz'];
   var i = scripts.length - 1;
@@ -75,11 +79,17 @@ test('.renderScriptUrls creates option elements and appends them to the scripts 
       .exactly(scripts.length + ' times')
       .withArguments('option')
       .returnValue(option);
+    jack.expect('DOM.fixRelativeUrl')
+      .exactly(scripts.length + ' times')
+      .mock(function(url) {
+        equals(scripts[i], url);
+        return scripts[i];
+      });
     jack.expect('ddlScripts.appendChild')
       .exactly(scripts.length + ' times')
       .mock(function(option) {
         equals(scripts[i--], option.value);
-        equals(option.value, option.innerHTML);
+        equals(option.value, option.text);
       })
       .withArguments(option);
 
@@ -229,9 +239,64 @@ test('.formatError returns a new &lt;p&gt; element with the provided error infor
 test('.fixRelativeUrl determines and returns the fully-qualified path for the given url', function() {
   var relativeUrl = '/path/to/someScript.js';
   var baseUrl = 'http://www.somesite.com';
-  var expected = relativeUrl + baseUrl;
+  var expected = baseUrl + relativeUrl;
 
   jack(function() {
-    
+    jack.expect('DOM.getBaseUrl')
+      .mock(noop)
+      .returnValue(baseUrl);
+
+    equals(expected, DOM.fixRelativeUrl(relativeUrl));
   });
+
+  relativeUrl = '//path/to/otherScript.js';
+  expected = baseUrl + relativeUrl;
+
+  jack(function() {
+    jack.expect('DOM.getBaseUrl')
+      .mock(noop)
+      .returnValue(baseUrl);
+
+    equals(expected, DOM.fixRelativeUrl(relativeUrl));
+  });
+
+  relativeUrl = 'http://www.somesite.com/someScript.js';
+  expected = relativeUrl;
+
+  jack(function() {
+    jack.expect('DOM.getBaseUrl')
+      .never();
+
+    equals(expected, DOM.fixRelativeUrl(relativeUrl));
+  });
+
+  relativeUrl = 'https://www.somesite.com/someScript.js';
+  expected = relativeUrl;
+
+  jack(function() {
+    jack.expect('DOM.getBaseUrl')
+      .never();
+
+    equals(expected, DOM.fixRelativeUrl(relativeUrl));
+  });
+});
+
+test('.getBaseUrl returns the tab url with the page stripped off the end', function() {
+  DOM.tabUrl = 'http://www.somesite.com/somePage.html';
+
+  equals('http://www.somesite.com', DOM.getBaseUrl());
+
+  DOM.tabUrl = 'https://somesite.com/theApp/somePage.aspx';
+
+  equals('https://somesite.com', DOM.getBaseUrl());
+
+  DOM.tabUrl = 'http://somesite.com/';
+
+  equals('http://somesite.com', DOM.getBaseUrl());
+
+  DOM.tabUrl = 'http://somesite.com';
+
+  equals('http://somesite.com', DOM.getBaseUrl());
+
+  DOM.tabUrl = null;
 });

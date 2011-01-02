@@ -24,6 +24,7 @@ var DOM = {
   BTN_CANCEL: 'cancel',
 
   tabId: null,
+  tabUrl: null,
 
   createScriptRequest: function() {
     return new XMLHttpRequest();
@@ -33,17 +34,31 @@ var DOM = {
     DOM.renderScriptUrls(response.scripts);
   },
 
+  getBaseUrl: function() {
+    var a = document.createElement('a');
+    a.href = DOM.tabUrl;
+    return a.protocol + '//' + a.host;
+  },
+
+  fixRelativeUrl: function(relativeUrl) {
+    if (/^https?:\/\//.test(relativeUrl)) {
+      return relativeUrl;
+    }
+    return DOM.getBaseUrl() + relativeUrl;
+  },
+
   renderScriptUrls: function(urls) {
     var ddlScripts = document.getElementById(DOM.DDL_SCRIPTS),
       option;
     for (var i = urls.length - 1; i >= 0; --i) {
       option = document.createElement('option');
-      option.innerHTML = option.value = urls[i];
+      option.text = option.value = DOM.fixRelativeUrl(urls[i]);
       ddlScripts.appendChild(option);
     }
   },
 
   getScripts: function(tab) {
+    DOM.tabUrl = tab.url;
     chrome.tabs.sendRequest(
       (DOM.tabId = tab.id), {action: 'getScripts'}, DOM.getScriptsCallback);
   },

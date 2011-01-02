@@ -1,8 +1,12 @@
 * TODO Create a real icon!!!
 * TODO Figure out why some errors are null
 * TODO Either filter script urls that don't start with /^https?/, or prepend if possible
-  Not sure why those show up either, are they parts of extensions, or scripts
-  that aren't fully qualified?
+  This is working for the most part, but there are still some issues.  For
+  example, the top two scripts on the github page for this project will not
+  load.  Whereas most of these kinds of scripts start with a forward slash,
+  those start with two which may indicate the domain?  Also relative urls with
+  path modifiers ('..') are not accounted for, nor are paths that don't start
+  with any forward slashes.
 * TODO Decide upon the best format for error output in the popup
 * TODO Determine if the closures are necessary
 * TODO Implement some level of functional or integration testing
