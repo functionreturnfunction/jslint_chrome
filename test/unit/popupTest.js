@@ -1,11 +1,26 @@
 loadScriptDynamically('../../src/popup.js');
 module('DOM Script');
 
-test('.initialize uses the chrome.tabs api to call .getScripts with the current tab', function() {
+test('.initialize uses the chrome.tabs api to call .getScripts with the current tab, and initializes the event handlers for the JSLint and Cancel buttons of the popup', function() {
   jack(function() {
+    var btnJSLint = jack.create('btnJSLint', ['addEventListener']);
+    var btnCancel = jack.create('btnCancel', ['addEventListener']);
+
     jack.expect('chrome.tabs.getSelected')
       .mock(noop)
       .withArguments(null, DOM.getScripts);
+    jack.expect('document.getElementById')
+      .mock(noop)
+      .withArguments(DOM.BTN_JSLINT)
+      .returnValue(btnJSLint);
+    jack.expect('document.getElementById')
+      .mock(noop)
+      .withArguments(DOM.BTN_CANCEL)
+      .returnValue(btnCancel);
+    jack.expect('btnJSLint.addEventListener')
+      .withArguments('click', DOM.btnJSLint_Click, false);
+    jack.expect('btnCancel.addEventListener')
+      .withArguments('click', DOM.btnCancel_Click, false);
 
     DOM.initialize();
   });

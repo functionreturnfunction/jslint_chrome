@@ -19,6 +19,8 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 
 var DOM = {
   DDL_SCRIPTS: 'script_urls',
+  BTN_JSLINT: 'jslint',
+  BTN_CANCEL: 'cancel',
 
   tabId: null,
 
@@ -43,5 +45,9 @@ var DOM = {
 
   initialize: function() {
     chrome.tabs.getSelected(null, DOM.getScripts);
+    document.getElementById(DOM.BTN_JSLINT)
+      .addEventListener('click', DOM.btnJSLint_Click, false);
+    document.getElementById(DOM.BTN_CANCEL)
+      .addEventListener('click', DOM.btnCancel_Click, false);
   }
 };

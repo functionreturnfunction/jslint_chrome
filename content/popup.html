@@ -24,8 +24,10 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
   <body>
     <div class="main">
       <select id="script_urls"></select>
-      <input type="button" value="JSLint" />
+      <input type="button" id="jslint" value="JSLint" />
+      <input type="button" id="cancel" value="Cancel" />
     </div>
-    <script src="popup.js"></script>
+    <script type="text/javascript" src="popup.js"></script>
+    <script type="text/javascript" src="fulljslint.js"></script>
   </body>
 </html>
