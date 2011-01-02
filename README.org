@@ -1,0 +1,51 @@
+#+TITLE: The JSLint extension for Google Chrome
+* THIS EXTENSION IS A WORK IN PROGRESS, AND DOES NOT YET FUNCTION.
+
+* License
+  Copyright 2011 Jason Duncan
+
+  This file is part of the JSLint Extension for Google Chrome.
+
+  The JSLint Extension for Google Chrome is free software: you can redistribute
+  it and/or modify it under the terms of the GNU General Public License as
+  published by the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  The JSLint Extension for Google Chrome is distributed in the hope that it will
+  be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+  Public License for more details.
+
+  You should have received a copy of the GNU General Public License along with
+  the JSLint Extension for Google Chrome.  If not, see
+  <http://www.gnu.org/licenses/>.
+
+* About
+  This extension adds the ability to run any scripts loaded into the current
+  page through Douglas Crockford's JSLint implementation.
+
+* Installation/Usage
+** Dependencies
+   There are no external dependencies for the extension itself, but building it
+   requires ruby and rake.
+
+** Building
+   The =rake build= task will copy all the necessary files into a directory
+   called =output/=.
+
+** Installation
+   After building, the extension can be installed as follows (as of Chrome
+   version 10.0.612.1 dev):
+*** From Chrome, click the tool menu button
+*** Click Tools -> Extensions
+*** Click the plus sign "+" next to "Developer Mode"
+    This step is not necessary if Developer Mode is already open
+*** Click the "Load Unpacked Extension" button
+*** Navigate to the =output/= directory under the project checkout directory and click the "Open" button
+
+** Usage
+   Installing the extension as described above will add a button next to the url
+   bar in Chrome.  Clicking that button will show a small popup with a drop down
+   list of all the javascript files loaded in the current page.  Choose the file
+   to be examined in the list, and click the "JSLint" button.  Results will be
+   shown in the popup.
