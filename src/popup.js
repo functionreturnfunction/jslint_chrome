@@ -40,11 +40,21 @@ var Popup = {
     return a.protocol + '//' + a.host;
   },
 
+  getPagePath: function() {
+    var a = document.createElement('a');
+    a.href = Popup.tabUrl;
+    return Popup.getBaseUrl() + a.pathname.match(/(.*)\/[^\/]+/)[1] + '/';
+  },
+
   fixRelativeUrl: function(relativeUrl) {
-    if (/^https?:\/\//.test(relativeUrl)) {
-      return relativeUrl;
+    switch (true) {
+      case /^https?:\/\//.test(relativeUrl):
+        return relativeUrl;        
+      case /^\.\./.test(relativeUrl):
+        return Popup.getBaseUrl() + Popup.getPagePath() + relativeUrl;
+      default:
+        return Popup.getBaseUrl() + relativeUrl;
     }
-    return Popup.getBaseUrl() + relativeUrl;
   },
 
   renderScriptUrls: function(urls) {

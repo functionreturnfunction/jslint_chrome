@@ -14,5 +14,6 @@
 ** TODO General UI niceness, fix layout, css, etc.
 ** TODO Determine best way to build the extension and minify/pack the js files (retaining header/copyright info)
 
+
 * Beyond 1.0
 ** TODO Nicer icon

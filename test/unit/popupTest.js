@@ -270,6 +270,21 @@ test('.fixRelativeUrl determines and returns the fully-qualified path for the gi
     equals(expected, Popup.fixRelativeUrl(relativeUrl));
   });
 
+  var pagePath = '/theApp/someModule/';
+  relativeUrl = '../../scripts/someScript.js';
+  expected = baseUrl + pagePath + relativeUrl;
+
+  jack(function() {
+    jack.expect('Popup.getBaseUrl')
+      .mock(noop)
+      .returnValue(baseUrl);
+    jack.expect('Popup.getPagePath')
+      .mock(noop)
+      .returnValue(pagePath);
+
+    equals(expected, Popup.fixRelativeUrl(relativeUrl));
+  });
+
   relativeUrl = 'https://www.somesite.com/someScript.js';
   expected = relativeUrl;
 
@@ -299,4 +314,14 @@ test('.getBaseUrl returns the tab url with the page stripped off the end', funct
   equals('http://somesite.com', Popup.getBaseUrl());
 
   Popup.tabUrl = null;
+});
+
+test('.getPagePath returns the url path of the current page', function() {
+  Popup.tabUrl = 'http://www.somesite.com/somePage.html';
+
+  equals('http://www.somesite.com/', Popup.getPagePath());
+
+  Popup.tabUrl = 'http://www.somesite.com/theApp/somePage.html';
+
+  equals('http://www.somesite.com/theApp/', Popup.getPagePath());
 });
