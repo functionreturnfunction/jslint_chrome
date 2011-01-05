@@ -60,7 +60,7 @@ file OUTPUT_FILES[:content] => [OUTPUT_DIRECTORY] do
 end
 
 file OUTPUT_FILES[:popup_js] => [OUTPUT_DIRECTORY] do
-  build_script_file_with_listeners :popup_js, 'DOM.initialize();'
+  build_script_file_with_listeners :popup_js, 'Popup.initialize();'
 end
 
 OUTPUT_FILES.each do |f, name|

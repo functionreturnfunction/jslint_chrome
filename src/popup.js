@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License along with the
 JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var DOM = {
+var Popup = {
   DIV_RESULTS: 'results',
   DDL_SCRIPTS: 'script_urls',
   BTN_JSLINT: 'jslint',
@@ -31,12 +31,12 @@ var DOM = {
   },
 
   getScriptsCallback: function(response) {
-    DOM.renderScriptUrls(response.scripts);
+    Popup.renderScriptUrls(response.scripts);
   },
 
   getBaseUrl: function() {
     var a = document.createElement('a');
-    a.href = DOM.tabUrl;
+    a.href = Popup.tabUrl;
     return a.protocol + '//' + a.host;
   },
 
@@ -44,32 +44,32 @@ var DOM = {
     if (/^https?:\/\//.test(relativeUrl)) {
       return relativeUrl;
     }
-    return DOM.getBaseUrl() + relativeUrl;
+    return Popup.getBaseUrl() + relativeUrl;
   },
 
   renderScriptUrls: function(urls) {
-    var ddlScripts = document.getElementById(DOM.DDL_SCRIPTS),
+    var ddlScripts = document.getElementById(Popup.DDL_SCRIPTS),
       option;
     for (var i = urls.length - 1; i >= 0; --i) {
       option = document.createElement('option');
-      option.text = option.value = DOM.fixRelativeUrl(urls[i]);
+      option.text = option.value = Popup.fixRelativeUrl(urls[i]);
       ddlScripts.appendChild(option);
     }
   },
 
   getScripts: function(tab) {
-    DOM.tabUrl = tab.url;
+    Popup.tabUrl = tab.url;
     chrome.tabs.sendRequest(
-      (DOM.tabId = tab.id), {action: 'getScripts'}, DOM.getScriptsCallback);
+      (Popup.tabId = tab.id), {action: 'getScripts'}, Popup.getScriptsCallback);
   },
 
   getChosenScriptUrl: function() {
-    var ddlScripts = document.getElementById(DOM.DDL_SCRIPTS);
+    var ddlScripts = document.getElementById(Popup.DDL_SCRIPTS);
     return ddlScripts.options[ddlScripts.selectedIndex].value;
   },
 
   gatherScriptSource: function(url) {
-    var request = DOM.createScriptRequest();
+    var request = Popup.createScriptRequest();
     request.open('GET', url, false);
     request.send(null);
     return request.responseText;
@@ -88,29 +88,29 @@ var DOM = {
       return;
     }
 
-    var results = document.getElementById(DOM.DIV_RESULTS), error;
+    var results = document.getElementById(Popup.DIV_RESULTS), error;
     results.style.display = 'block';
     for (var i = 0, len = JSLINT.errors.length; i < len; ++i) {
       error = JSLINT.errors[i];
       if (error != null) {
         results.appendChild(
-          DOM.formatError(error));
+          Popup.formatError(error));
       }
     }
   },
 
   btnJSLint_Click: function() {
-    DOM.renderJSLintResults(
+    Popup.renderJSLintResults(
       JSLINT(
-        DOM.gatherScriptSource(
-          DOM.getChosenScriptUrl())));
+        Popup.gatherScriptSource(
+          Popup.getChosenScriptUrl())));
   },
 
   initialize: function() {
-    chrome.tabs.getSelected(null, DOM.getScripts);
-    document.getElementById(DOM.BTN_JSLINT)
-      .addEventListener('click', DOM.btnJSLint_Click, false);
-    document.getElementById(DOM.BTN_CANCEL)
-      .addEventListener('click', DOM.btnCancel_Click, false);
+    chrome.tabs.getSelected(null, Popup.getScripts);
+    document.getElementById(Popup.BTN_JSLINT)
+      .addEventListener('click', Popup.btnJSLint_Click, false);
+    document.getElementById(Popup.BTN_CANCEL)
+      .addEventListener('click', Popup.btnCancel_Click, false);
   }
 };

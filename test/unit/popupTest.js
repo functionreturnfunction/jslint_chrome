@@ -1,5 +1,5 @@
 loadScriptDynamically('../../src/popup.js');
-module('DOM Script');
+module('Popup Script');
 
 test('.initialize uses the chrome.tabs api to call .getScripts with the current tab, and initializes the event handlers for the JSLint and Cancel buttons of the popup', function() {
   jack(function() {
@@ -8,21 +8,21 @@ test('.initialize uses the chrome.tabs api to call .getScripts with the current 
 
     jack.expect('chrome.tabs.getSelected')
       .mock(noop)
-      .withArguments(null, DOM.getScripts);
+      .withArguments(null, Popup.getScripts);
     jack.expect('document.getElementById')
       .mock(noop)
-      .withArguments(DOM.BTN_JSLINT)
+      .withArguments(Popup.BTN_JSLINT)
       .returnValue(btnJSLint);
     jack.expect('document.getElementById')
       .mock(noop)
-      .withArguments(DOM.BTN_CANCEL)
+      .withArguments(Popup.BTN_CANCEL)
       .returnValue(btnCancel);
     jack.expect('btnJSLint.addEventListener')
-      .withArguments('click', DOM.btnJSLint_Click, false);
+      .withArguments('click', Popup.btnJSLint_Click, false);
     jack.expect('btnCancel.addEventListener')
-      .withArguments('click', DOM.btnCancel_Click, false);
+      .withArguments('click', Popup.btnCancel_Click, false);
 
-    DOM.initialize();
+    Popup.initialize();
   });
 });
 
@@ -37,13 +37,13 @@ test('.getScripts sends a request to the given tab with the "getScripts" action 
       .mock(function(tabId, request, cb) {
         equals(tab.id, tabId);
         equals('getScripts', request.action);
-        same(DOM.getScriptsCallback, cb);
+        same(Popup.getScriptsCallback, cb);
       });
 
-    DOM.getScripts(tab);
+    Popup.getScripts(tab);
 
-    equals(tab.id, DOM.tabId)
-    equals(tab.url, DOM.tabUrl);
+    equals(tab.id, Popup.tabId)
+    equals(tab.url, Popup.tabUrl);
   });
 });
 
@@ -53,11 +53,11 @@ test('.getScriptsCallback calls .renderScriptUrls with the scripts attribute of 
   };
 
   jack(function() {
-    jack.expect('DOM.renderScriptUrls')
+    jack.expect('Popup.renderScriptUrls')
       .mock(noop)
       .withArguments(response.scripts);
 
-    DOM.getScriptsCallback(response);
+    Popup.getScriptsCallback(response);
   });
 });
 
@@ -72,14 +72,14 @@ test('.renderScriptUrls creates option elements and appends them to the scripts 
     jack.expect('document.getElementById')
       .mock(noop)
       .exactly('1 times')
-      .withArguments(DOM.DDL_SCRIPTS)
+      .withArguments(Popup.DDL_SCRIPTS)
       .returnValue(ddlScripts);
     jack.expect('document.createElement')
       .mock(noop)
       .exactly(scripts.length + ' times')
       .withArguments('option')
       .returnValue(option);
-    jack.expect('DOM.fixRelativeUrl')
+    jack.expect('Popup.fixRelativeUrl')
       .exactly(scripts.length + ' times')
       .mock(function(url) {
         equals(scripts[i], url);
@@ -93,7 +93,7 @@ test('.renderScriptUrls creates option elements and appends them to the scripts 
       })
       .withArguments(option);
 
-    DOM.renderScriptUrls(scripts);
+    Popup.renderScriptUrls(scripts);
   });
 });
 
@@ -109,15 +109,15 @@ test('.getChosenScriptUrl returns the chosen script url from the drop down list'
   jack(function() {
     jack.expect('document.getElementById')
       .mock(noop)
-      .withArguments(DOM.DDL_SCRIPTS)
+      .withArguments(Popup.DDL_SCRIPTS)
       .returnValue(ddlScripts);
 
-    equals(url, DOM.getChosenScriptUrl());
+    equals(url, Popup.getChosenScriptUrl());
   });
 });
 
 test('.createScriptRequest returns a new XMLHttpRequest object', function() {
-  same(XMLHttpRequest, DOM.createScriptRequest().constructor);
+  same(XMLHttpRequest, Popup.createScriptRequest().constructor);
 });
 
 test('.gatherScriptSource uses an XMLHttpRequest object to synchronously retrieve and return the source of the script at the given url', function() {
@@ -128,7 +128,7 @@ test('.gatherScriptSource uses an XMLHttpRequest object to synchronously retriev
     var request = jack.create('request', ['open', 'send']);
     request.responseText = source;
 
-    jack.expect('DOM.createScriptRequest')
+    jack.expect('Popup.createScriptRequest')
       .mock(noop)
       .returnValue(request);
     jack.expect('request.open');
@@ -137,7 +137,7 @@ test('.gatherScriptSource uses an XMLHttpRequest object to synchronously retriev
     jack.expect('request.send')
       .withArguments(null);
     
-    equals(source, DOM.gatherScriptSource());
+    equals(source, Popup.gatherScriptSource());
   });
 });
 
@@ -147,21 +147,21 @@ test('.btnJSLint_Click gathers the source for the chosen script, runs jslint on 
   var result = new Object();
 
   jack(function() {
-    jack.expect('DOM.getChosenScriptUrl')
+    jack.expect('Popup.getChosenScriptUrl')
       .mock(noop)
       .returnValue(url);
-    jack.expect('DOM.gatherScriptSource')
+    jack.expect('Popup.gatherScriptSource')
       .mock(noop)
       .withArguments(url)
       .returnValue(source);
     jack.expect('JSLINT')
       .withArguments(source)
       .returnValue(result);
-    jack.expect('DOM.renderJSLintResults')
+    jack.expect('Popup.renderJSLintResults')
       .mock(noop)
       .withArguments(result);
 
-    DOM.btnJSLint_Click();
+    Popup.btnJSLint_Click();
   });
 });
 
@@ -170,7 +170,7 @@ test('.renderJSLintResults does nothing if result is true, indicating that the s
     jack.expect('document.getElementById')
       .never();
 
-    DOM.renderJSLintResults(true);
+    Popup.renderJSLintResults(true);
   });
 });
 
@@ -190,9 +190,9 @@ test('.renderJSLintResults formats and appends each error to the output area if 
 
     jack.expect('document.getElementById')
       .mock(noop)
-      .withArguments(DOM.DIV_RESULTS)
+      .withArguments(Popup.DIV_RESULTS)
       .returnValue(results);
-    jack.expect('DOM.formatError')
+    jack.expect('Popup.formatError')
       .exactly((JSLINT.errors.length - 1) + ' times')
       .mock(function(obj) {
         same(obj, JSLINT.errors[i]);
@@ -204,7 +204,7 @@ test('.renderJSLintResults formats and appends each error to the output area if 
         same(obj, formattedErrors[j--]);
       });
 
-    DOM.renderJSLintResults(false);
+    Popup.renderJSLintResults(false);
     
     equals('block', results.style.display);
   });
@@ -230,7 +230,7 @@ test('.formatError returns a new &lt;p&gt; element with the provided error infor
       .withArguments('p')
       .returnValue(p);
 
-    var result = DOM.formatError(error);
+    var result = Popup.formatError(error);
     same(result, p);
     equals(expected, result.innerHTML);
   });
@@ -242,61 +242,61 @@ test('.fixRelativeUrl determines and returns the fully-qualified path for the gi
   var expected = baseUrl + relativeUrl;
 
   jack(function() {
-    jack.expect('DOM.getBaseUrl')
+    jack.expect('Popup.getBaseUrl')
       .mock(noop)
       .returnValue(baseUrl);
 
-    equals(expected, DOM.fixRelativeUrl(relativeUrl));
+    equals(expected, Popup.fixRelativeUrl(relativeUrl));
   });
 
   relativeUrl = '//path/to/otherScript.js';
   expected = baseUrl + relativeUrl;
 
   jack(function() {
-    jack.expect('DOM.getBaseUrl')
+    jack.expect('Popup.getBaseUrl')
       .mock(noop)
       .returnValue(baseUrl);
 
-    equals(expected, DOM.fixRelativeUrl(relativeUrl));
+    equals(expected, Popup.fixRelativeUrl(relativeUrl));
   });
 
   relativeUrl = 'http://www.somesite.com/someScript.js';
   expected = relativeUrl;
 
   jack(function() {
-    jack.expect('DOM.getBaseUrl')
+    jack.expect('Popup.getBaseUrl')
       .never();
 
-    equals(expected, DOM.fixRelativeUrl(relativeUrl));
+    equals(expected, Popup.fixRelativeUrl(relativeUrl));
   });
 
   relativeUrl = 'https://www.somesite.com/someScript.js';
   expected = relativeUrl;
 
   jack(function() {
-    jack.expect('DOM.getBaseUrl')
+    jack.expect('Popup.getBaseUrl')
       .never();
 
-    equals(expected, DOM.fixRelativeUrl(relativeUrl));
+    equals(expected, Popup.fixRelativeUrl(relativeUrl));
   });
 });
 
 test('.getBaseUrl returns the tab url with the page stripped off the end', function() {
-  DOM.tabUrl = 'http://www.somesite.com/somePage.html';
+  Popup.tabUrl = 'http://www.somesite.com/somePage.html';
 
-  equals('http://www.somesite.com', DOM.getBaseUrl());
+  equals('http://www.somesite.com', Popup.getBaseUrl());
 
-  DOM.tabUrl = 'https://somesite.com/theApp/somePage.aspx';
+  Popup.tabUrl = 'https://somesite.com/theApp/somePage.aspx';
 
-  equals('https://somesite.com', DOM.getBaseUrl());
+  equals('https://somesite.com', Popup.getBaseUrl());
 
-  DOM.tabUrl = 'http://somesite.com/';
+  Popup.tabUrl = 'http://somesite.com/';
 
-  equals('http://somesite.com', DOM.getBaseUrl());
+  equals('http://somesite.com', Popup.getBaseUrl());
 
-  DOM.tabUrl = 'http://somesite.com';
+  Popup.tabUrl = 'http://somesite.com';
 
-  equals('http://somesite.com', DOM.getBaseUrl());
+  equals('http://somesite.com', Popup.getBaseUrl());
 
-  DOM.tabUrl = null;
+  Popup.tabUrl = null;
 });
