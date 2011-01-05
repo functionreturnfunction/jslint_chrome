@@ -22,6 +22,7 @@ var Popup = {
   DDL_SCRIPTS: 'script_urls',
   BTN_JSLINT: 'jslint',
   BTN_CANCEL: 'cancel',
+  CODE_CSS_CLASS: 'code',
 
   tabId: null,
   tabUrl: null,
@@ -57,6 +58,12 @@ var Popup = {
     }
   },
 
+  htmlEncode: function(str) {
+    return str
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  },
+
   renderScriptUrls: function(urls) {
     var ddlScripts = document.getElementById(Popup.DDL_SCRIPTS),
       option;
@@ -88,8 +95,9 @@ var Popup = {
   formatError: function(error) {
     var p = document.createElement('p');
     p.innerHTML = 'Problem at line ' + error.line + ', character ' +
-      error.character + '<br />Source: ' + error.evidence + '<br />' +
-      'Problem: ' + error.reason + '<br />';
+      error.character + '<br />Source: <span class="' + Popup.CODE_CSS_CLASS +
+      '">' + Popup.htmlEncode(error.evidence) + '</span><br />' + 'Problem: ' +
+      error.reason + '<br />';
     return p;
   },
 

@@ -219,9 +219,11 @@ test('.formatError returns a new &lt;p&gt; element with the provided error infor
     reason: "I don't like your face",
     evidence: "document.getElementById('someElement').style.font-family = 'Comic Sans';"
   };
+  var htmlEncoded = 'This is the html encoded string';
   var expected = 'Problem at line ' + error.line + ', character ' +
-    error.character + '<br />Source: ' + error.evidence + '<br />' +
-    'Problem: ' + error.reason + '<br />';
+    error.character + '<br />Source: <span class="' + Popup.CODE_CSS_CLASS +
+    '">' + htmlEncoded + '</span><br />' + 'Problem: ' + error.reason +
+    '<br />';
   var p = new Object();
 
   jack(function() {
@@ -229,6 +231,10 @@ test('.formatError returns a new &lt;p&gt; element with the provided error infor
       .mock(noop)
       .withArguments('p')
       .returnValue(p);
+    jack.expect('Popup.htmlEncode')
+      .mock(noop)
+      .withArguments(error.evidence)
+      .returnValue(htmlEncoded);
 
     var result = Popup.formatError(error);
     same(result, p);
@@ -324,4 +330,11 @@ test('.getPagePath returns the url path of the current page', function() {
   Popup.tabUrl = 'http://www.somesite.com/theApp/somePage.html';
 
   equals('http://www.somesite.com/theApp/', Popup.getPagePath());
+});
+
+test('.htmlEncode html encodes the given string', function() {
+  var str = '<<..>>asdf>fdsa<';
+  var expected = '&lt;&lt;..&gt;&gt;asdf&gt;fdsa&lt;'
+
+  equals(expected, Popup.htmlEncode(str));
 });

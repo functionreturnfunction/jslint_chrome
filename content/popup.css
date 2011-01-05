@@ -30,3 +30,7 @@ div.main_div {
 div#results {
   display: none;
 }
+
+span.code {
+  font-family: monospace;
+}
