@@ -126,6 +126,10 @@ var Popup = {
           Popup.getChosenScriptUrl())));
   },
 
+  btnCancel_Click: function() {
+    window.close();
+  },
+
   initialize: function() {
     chrome.tabs.getSelected(null, Popup.getScripts);
     document.getElementById(Popup.BTN_JSLINT)
