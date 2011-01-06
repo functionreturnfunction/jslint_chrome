@@ -108,6 +108,8 @@ var Popup = {
 
     var results = document.getElementById(Popup.DIV_RESULTS), error;
     results.style.display = 'block';
+    results.innerHTML = "";
+
     for (var i = 0, len = JSLINT.errors.length; i < len; ++i) {
       error = JSLINT.errors[i];
       if (error != null) {
