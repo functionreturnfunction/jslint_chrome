@@ -338,3 +338,12 @@ test('.htmlEncode html encodes the given string', function() {
 
   equals(expected, Popup.htmlEncode(str));
 });
+
+test('.btnCancel_Click() closes the window', function() {
+  jack(function() {
+    jack.expect('window.close')
+      .mock(noop);
+
+    Popup.btnCancel_Click();
+  });
+});
