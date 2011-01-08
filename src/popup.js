@@ -18,10 +18,10 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 var Popup = {
-  DIV_RESULTS: 'results',
-  DDL_SCRIPTS: 'script_urls',
-  BTN_JSLINT: 'jslint',
-  BTN_CANCEL: 'cancel',
+  DIV_RESULTS: '#results',
+  DDL_SCRIPTS: '#script_urls',
+  BTN_JSLINT: '#jslint',
+  BTN_CANCEL: '#cancel',
   CODE_CSS_CLASS: 'code',
 
   tabId: null,
@@ -65,13 +65,12 @@ var Popup = {
   },
 
   renderScriptUrls: function(urls) {
-    var ddlScripts = document.getElementById(Popup.DDL_SCRIPTS),
-      option;
-    for (var i = urls.length - 1; i >= 0; --i) {
-      option = document.createElement('option');
-      option.text = option.value = Popup.fixRelativeUrl(urls[i]);
-      ddlScripts.appendChild(option);
-    }
+    var ddlScripts = $(Popup.DDL_SCRIPTS);
+    $.each(urls, function(url) {
+      url = Popup.fixRelativeUrl(url);
+      ddlScripts.append($('<option></option>')
+                        .attr({text: url, value: url}));
+    });
   },
 
   getScripts: function(tab) {
@@ -81,8 +80,7 @@ var Popup = {
   },
 
   getChosenScriptUrl: function() {
-    var ddlScripts = document.getElementById(Popup.DDL_SCRIPTS);
-    return ddlScripts.options[ddlScripts.selectedIndex].value;
+    return $(Popup.DDL_SCRIPTS).val();
   },
 
   gatherScriptSource: function(url) {
@@ -93,12 +91,11 @@ var Popup = {
   },
 
   formatError: function(error) {
-    var p = document.createElement('p');
-    p.innerHTML = 'Problem at line ' + error.line + ', character ' +
-      error.character + '<br />Source: <span class="' + Popup.CODE_CSS_CLASS +
-      '">' + Popup.htmlEncode(error.evidence) + '</span><br />' + 'Problem: ' +
-      error.reason + '<br />';
-    return p;
+    return $('<p></p>')
+      .html('Problem at line ' + error.line + ', character ' + error.character +
+            '<br />Source: <span class="' + Popup.CODE_CSS_CLASS + '">' +
+            Popup.htmlEncode(error.evidence) + '</span><br />' + 'Problem: ' +
+            error.reason + '<br />');
   },
 
   renderJSLintResults: function(result) {
@@ -106,17 +103,15 @@ var Popup = {
       return;
     }
 
-    var results = document.getElementById(Popup.DIV_RESULTS), error;
-    results.style.display = 'block';
-    results.innerHTML="<h2>Results:</h2>"
+    var results = $(Popup.DIV_RESULTS)
+      .css({display: 'block'})
+      .html('<h2>Results:</h2>');
 
-    for (var i = 0, len = JSLINT.errors.length; i < len; ++i) {
-      error = JSLINT.errors[i];
+    $.each(JSLINT.errors, function(error) {
       if (error != null) {
-        results.appendChild(
-          Popup.formatError(error));
+        results.append(Popup.formatError(error));
       }
-    }
+    });
   },
 
   btnJSLint_Click: function() {
@@ -130,11 +125,13 @@ var Popup = {
     window.close();
   },
 
+  initializeEvents: function() {
+    $(Popup.BTN_JSLINT).click(Popup.btnJSLint_Click);
+    $(Popup.BTN_CANCEL).click(Popup.btnCancel_Click);
+  },
+
   initialize: function() {
     chrome.tabs.getSelected(null, Popup.getScripts);
-    document.getElementById(Popup.BTN_JSLINT)
-      .addEventListener('click', Popup.btnJSLint_Click, false);
-    document.getElementById(Popup.BTN_CANCEL)
-      .addEventListener('click', Popup.btnCancel_Click, false);
+    Popup.initializeEvents();
   }
 };
