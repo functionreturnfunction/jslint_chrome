@@ -27,12 +27,12 @@ var Popup = {
   tabId: null,
   tabUrl: null,
 
-  createScriptRequest: function() {
-    return new XMLHttpRequest();
-  },
-
   getScriptsCallback: function(response) {
     Popup.renderScriptUrls(response.scripts);
+  },
+
+  getScriptBodyCallback: function(source) {
+    Popup.renderJSLintResults(JSLINT(source));
   },
 
   getBaseUrl: function() {
@@ -83,13 +83,6 @@ var Popup = {
     return $(Popup.DDL_SCRIPTS).val();
   },
 
-  gatherScriptSource: function(url) {
-    var request = Popup.createScriptRequest();
-    request.open('GET', url, false);
-    request.send(null);
-    return request.responseText;
-  },
-
   formatError: function(error) {
     return $('<p></p>')
       .html('Problem at line ' + error.line + ', character ' + error.character +
@@ -115,11 +108,20 @@ var Popup = {
   },
 
   btnJSLint_Click: function() {
-    Popup.renderJSLintResults(
-      JSLINT(
-        Popup.gatherScriptSource(
-          Popup.getChosenScriptUrl())));
+    $.ajax({
+      url: Popup.getChosenScriptUrl(),
+      type: 'GET',
+      dataType: 'text',
+      success: Popup.getScriptBodyCallback
+    });
   },
+
+  // btnJSLint_Click: function() {
+  //   Popup.renderJSLintResults(
+  //     JSLINT(
+  //       Popup.gatherScriptSource(
+  //         Popup.getChosenScriptUrl())));
+  // },
 
   btnCancel_Click: function() {
     window.close();

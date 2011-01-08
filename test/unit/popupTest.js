@@ -124,50 +124,20 @@ test('.getChosenScriptUrl returns the chosen script url from the drop down list'
   });
 });
 
-test('.createScriptRequest returns a new XMLHttpRequest object', function() {
-  same(XMLHttpRequest, Popup.createScriptRequest().constructor);
-});
-
-test('.gatherScriptSource uses an XMLHttpRequest object to synchronously retrieve and return the source of the script at the given url', function() {
+test('.btnJSLint_Click makes an ajax request to the chosen script url using Popup.getScriptBodyCallback', function() {
   var url = 'this is the chosen script url';
-  var source = 'this is the script source';
-
-  jack(function() {
-    var request = jack.create('request', ['open', 'send']);
-    request.responseText = source;
-
-    jack.expect('Popup.createScriptRequest')
-      .mock(noop)
-      .returnValue(request);
-    jack.expect('request.open');
-      // no idea why this isn't working
-      // .withArguments('GET', url);
-    jack.expect('request.send')
-      .withArguments(null);
-    
-    equals(source, Popup.gatherScriptSource());
-  });
-});
-
-test('.btnJSLint_Click gathers the source for the chosen script, runs jslint on it, and renders the result', function() {
-  var url = 'this is the chosen script url';
-  var source = 'this is the script source';
-  var result = new Object();
 
   jack(function() {
     jack.expect('Popup.getChosenScriptUrl')
       .mock(noop)
       .returnValue(url);
-    jack.expect('Popup.gatherScriptSource')
-      .mock(noop)
-      .withArguments(url)
-      .returnValue(source);
-    jack.expect('JSLINT')
-      .withArguments(source)
-      .returnValue(result);
-    jack.expect('Popup.renderJSLintResults')
-      .mock(noop)
-      .withArguments(result);
+    jack.expect('$.ajax')
+      .mock(function (opts) {
+        equals(url, opts.url);
+        equals('GET', opts.type);
+        equals('text', opts.dataType);
+        equals(Popup.getScriptBodyCallback, opts.success);
+      });
 
     Popup.btnJSLint_Click();
   });
@@ -360,5 +330,21 @@ test('.btnCancel_Click() closes the window', function() {
       .mock(noop);
 
     Popup.btnCancel_Click();
+  });
+});
+
+test('.getScriptBodyCallback runs jslint on the provided script body and renders the result', function() {
+  var source = 'this is the script source';
+  var result = new Object();
+
+  jack(function() {
+    jack.expect('JSLINT')
+      .withArguments(source)
+      .returnValue(result);
+    jack.expect('Popup.renderJSLintResults')
+      .mock(noop)
+      .withArguments(result);
+
+    Popup.getScriptBodyCallback(source);
   });
 });

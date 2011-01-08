@@ -25,4 +25,6 @@ $.each = function(arr, fn) {
   }
 };
 
+$.ajax = noop;
+
 var jQuery = $;
