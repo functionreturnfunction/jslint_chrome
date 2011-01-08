@@ -288,33 +288,85 @@ test('.fixRelativeUrl determines and returns the fully-qualified path for the gi
 });
 
 test('.getBaseUrl returns the tab url with the page stripped off the end', function() {
-  Popup.tabUrl = 'http://www.somesite.com/somePage.html';
+  var protocol = 'http';
+  var host = 'www.somesite.com';
+  var url = protocol + '://' + host + '/somePage.html';
+  var oldJQueryUrl = $.url;
+  Popup.tabUrl = url;
 
-  equals('http://www.somesite.com', Popup.getBaseUrl());
+  jack(function() {
+    var urlObj = jack.create('urlObj', ['setUrl', 'attr']);
+    $.url = urlObj;
 
-  Popup.tabUrl = 'https://somesite.com/theApp/somePage.aspx';
+    jack.expect('urlObj.setUrl')
+      .withArguments(url)
+      .returnValue(urlObj);
+    jack.expect('urlObj.attr')
+      .withArguments('protocol')
+      .returnValue(protocol);
+    jack.expect('urlObj.attr')
+      .withArguments('host')
+      .returnValue(host);
 
-  equals('https://somesite.com', Popup.getBaseUrl());
+    equals(protocol + '://' + host, Popup.getBaseUrl());
+  });
 
-  Popup.tabUrl = 'http://somesite.com/';
+  $.url = oldJQueryUrl;
+  Popup.tabUrl = null;
+});
 
-  equals('http://somesite.com', Popup.getBaseUrl());
+test('.getBaseUrl does not include host if null', function() {
+  var protocol = 'file';
+  var host = null;
+  var url = protocol + ':///somePage.html';
+  var oldJQueryUrl = $.url;
+  Popup.tabUrl = url;
 
-  Popup.tabUrl = 'http://somesite.com';
+  jack(function() {
+    var urlObj = jack.create('urlObj', ['setUrl', 'attr']);
+    $.url = urlObj;
 
-  equals('http://somesite.com', Popup.getBaseUrl());
+    jack.expect('urlObj.setUrl')
+      .withArguments(url)
+      .returnValue(urlObj);
+    jack.expect('urlObj.attr')
+      .withArguments('protocol')
+      .returnValue(protocol);
+    jack.expect('urlObj.attr')
+      .withArguments('host')
+      .returnValue(host);
 
+    equals(protocol + '://', Popup.getBaseUrl());
+  });
+
+  $.url = oldJQueryUrl;
   Popup.tabUrl = null;
 });
 
 test('.getPagePath returns the url path of the current page', function() {
-  Popup.tabUrl = 'http://www.somesite.com/somePage.html';
+  var protocol = 'http';
+  var host = 'www.somesite.com';
+  var directory = '/foo/bar/';
+  var url = protocol + '://' + host + directory + 'somePage.html';
+  var oldJQueryUrl = $.url;
+  Popup.tabUrl = url;
 
-  equals('http://www.somesite.com/', Popup.getPagePath());
+  jack(function() {
+    var urlObj = jack.create('urlObj', ['setUrl', 'attr']);
+    $.url = urlObj;
 
-  Popup.tabUrl = 'http://www.somesite.com/theApp/somePage.html';
+    jack.expect('urlObj.setUrl')
+      .withArguments(url)
+      .returnValue(urlObj);
+    jack.expect('urlObj.attr')
+      .withArguments('directory')
+      .returnValue(directory);
 
-  equals('http://www.somesite.com/theApp/', Popup.getPagePath());
+    equals(directory, Popup.getPagePath());
+  });
+  
+  $.url = oldJQueryUrl;
+  Popup.tabUrl = null;
 });
 
 test('.htmlEncode html encodes the given string', function() {

@@ -36,15 +36,12 @@ var Popup = {
   },
 
   getBaseUrl: function() {
-    var a = document.createElement('a');
-    a.href = Popup.tabUrl;
-    return a.protocol + '//' + a.host;
+    var url = $.url.setUrl(Popup.tabUrl);
+    return url.attr('protocol') + '://' + (url.attr('host') || '');
   },
 
   getPagePath: function() {
-    var a = document.createElement('a');
-    a.href = Popup.tabUrl;
-    return Popup.getBaseUrl() + a.pathname.match(/(.*)\/[^\/]+/)[1] + '/';
+    return  $.url.setUrl(Popup.tabUrl).attr('directory');
   },
 
   fixRelativeUrl: function(relativeUrl) {

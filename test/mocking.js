@@ -27,4 +27,8 @@ $.each = function(arr, fn) {
 
 $.ajax = noop;
 
+$.url = {
+  setUrl: noop
+};
+
 var jQuery = $;
