@@ -21,6 +21,8 @@ var $ = noop;
 
 $.each = function(arr, fn) {
   for (var i = 0, len = arr.length; i < len; ++i) {
-    fn(arr[i]);
+    fn(i, arr[i]);
   }
 };
+
+var jQuery = $;

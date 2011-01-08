@@ -66,7 +66,7 @@ var Popup = {
 
   renderScriptUrls: function(urls) {
     var ddlScripts = $(Popup.DDL_SCRIPTS);
-    $.each(urls, function(url) {
+    $.each(urls, function(i, url) {
       url = Popup.fixRelativeUrl(url);
       ddlScripts.append($('<option></option>')
                         .attr({text: url, value: url}));
@@ -107,7 +107,7 @@ var Popup = {
       .css({display: 'block'})
       .html('<h2>Results:</h2>');
 
-    $.each(JSLINT.errors, function(error) {
+    $.each(JSLINT.errors, function(i, error) {
       if (error != null) {
         results.append(Popup.formatError(error));
       }
