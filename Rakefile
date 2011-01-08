@@ -1,7 +1,8 @@
 LIBRARIES = {
   :jslint => 'fulljslint.js',
   :jquery => 'jquery.js',
-  :jquery_tmpl => 'jquery.tmpl.js'
+  :jquery_tmpl => 'jquery.tmpl.js',
+  :jquery_url => 'jquery.url.js'
 }
 FILES = {
   :copying => 'COPYING',
@@ -27,6 +28,7 @@ SOURCE_FILES = {
   :jslint => "#{LIBRARY_DIRECTORY}/#{LIBRARIES[:jslint]}",
   :jquery => "#{LIBRARY_DIRECTORY}/#{LIBRARIES[:jquery]}",
   :jquery_tmpl => "#{LIBRARY_DIRECTORY}/#{LIBRARIES[:jquery_tmpl]}",
+  :jquery_url => "#{LIBRARY_DIRECTORY}/#{LIBRARIES[:jquery_url]}",
   :manifest => "#{CONTENT_DIRECTORY}/#{FILES[:manifest]}"
 }
 OUTPUT_DIRECTORY = 'output'
@@ -40,6 +42,7 @@ OUTPUT_FILES = {
   :jslint => "#{OUTPUT_DIRECTORY}/#{LIBRARIES[:jslint]}",
   :jquery => "#{OUTPUT_DIRECTORY}/#{LIBRARIES[:jquery]}",
   :jquery_tmpl => "#{OUTPUT_DIRECTORY}/#{LIBRARIES[:jquery_tmpl]}",
+  :jquery_url => "#{OUTPUT_DIRECTORY}/#{LIBRARIES[:jquery_url]}",
   :manifest => "#{OUTPUT_DIRECTORY}/#{FILES[:manifest]}"
 }
 
