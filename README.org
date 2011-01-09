@@ -1,5 +1,9 @@
 #+TITLE: The JSLint extension for Google Chrome
 * License
+  All library files have their original headers preserved, and so license and
+  ownership information for them can be found there.  All files belonging to
+  this project are licensed thusly:
+
   Copyright 2011 Jason Duncan, Nicholas Ortenzio
 
   This file is part of the JSLint Extension for Google Chrome.
