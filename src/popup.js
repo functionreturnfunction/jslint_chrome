@@ -23,6 +23,7 @@ var Popup = {
   BTN_JSLINT: '#jslint',
   BTN_CANCEL: '#cancel',
   TMPL_SCRIPT_URLS: '#script_url_tmpl',
+  TMPL_JSLINT_ERROR: '#jslint_error_tmpl',
   CODE_CSS_CLASS: 'code',
 
   tabId: null,
@@ -71,20 +72,12 @@ var Popup = {
 
   getScripts: function(tab) {
     Popup.tabUrl = tab.url;
-    chrome.tabs.sendRequest(
-      (Popup.tabId = tab.id), {action: 'getScripts'}, Popup.getScriptsCallback);
+    chrome.tabs.sendRequest((Popup.tabId = tab.id), {action: 'getScripts'},
+                            Popup.getScriptsCallback);
   },
 
   getChosenScriptUrl: function() {
     return $(Popup.DDL_SCRIPTS).val();
-  },
-
-  formatError: function(error) {
-    return $('<p></p>')
-      .html('Problem at line ' + error.line + ', character ' + error.character +
-            '<br />Source: <span class="' + Popup.CODE_CSS_CLASS + '">' +
-            Popup.htmlEncode(error.evidence) + '</span><br />' + 'Problem: ' +
-            error.reason + '<br />');
   },
 
   renderJSLintResults: function(result) {
@@ -92,15 +85,17 @@ var Popup = {
       return;
     }
 
-    var results = $(Popup.DIV_RESULTS)
+    var results = [], resultsDiv = $(Popup.DIV_RESULTS)
       .css({display: 'block'})
       .html('<h2>Results:</h2>');
-
-    $.each(JSLINT.errors, function(i, error) {
-      if (error != null) {
-        results.append(Popup.formatError(error));
+    $.each(JSLINT.errors, function(i, item) {
+      if (item !== null) {
+        item.evidence = Popup.htmlEncode(item.evidence);
+        results.push(item);
       }
     });
+
+    $(Popup.TMPL_JSLINT_ERROR).tmpl(results).appendTo(resultsDiv);
   },
 
   btnJSLint_Click: function() {

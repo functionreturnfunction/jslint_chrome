@@ -147,78 +147,54 @@ test('.renderJSLintResults does nothing if result is true, indicating that the s
 });
 
 test('.renderJSLintResults formats and appends each error to the output area if result is false, indicating that the script failed JSLint', function() {
+  var evidence = 'this is unencoded evidence';
+  var encodedEvidence = 'this is encoded evidence';
   JSLINT.errors = [
-    new Object(), new Object(), new Object(), null // will have nulls for some reason
-  ];
-  var formattedErrors = [
-    new Object(), new Object(), new Object()
+    {evidence: evidence},
+    {evidence: evidence},
+    {evidence: evidence},
+    null // will have nulls for some reason
   ];
 
   jack(function() {
-    var results = jack.create('results', ['append', 'css', 'html']);
-    var i = JSLINT.errors.length - 2;
-    var j = i;
+    var resultsDiv = jack.create('resultsDiv', ['css', 'html']);
+    var template = jack.create('template', ['tmpl', 'appendTo'])
 
     jack.expect('$')
       .mock(noop)
       .withArguments(Popup.DIV_RESULTS)
-      .returnValue(results);
-    jack.expect('Popup.formatError')
-      .exactly((JSLINT.errors.length - 1) + ' times')
-      .mock(function(obj) {
-        same(obj, JSLINT.errors[i]);
-        return formattedErrors[i--];
-      });
-    jack.expect('results.html')
+      .returnValue(resultsDiv);
+    jack.expect('resultsDiv.html')
       .withArguments('<h2>Results:</h2>')
-      .returnValue(results);
-    jack.expect('results.css')
+      .returnValue(resultsDiv);
+    jack.expect('resultsDiv.css')
       .mock(function(opts) {
         equals('block', opts.display);
-        return results;
+        return resultsDiv;
       });
-    jack.expect('results.append')
-      .exactly(formattedErrors.length + ' times')
-      .mock(function(obj) {
-        same(obj, formattedErrors[j--]);
+    jack.expect('$')
+      .withArguments(Popup.TMPL_JSLINT_ERROR)
+      .returnValue(template);
+    jack.expect('Popup.htmlEncode')
+      .exactly((JSLINT.errors.length - 1) + ' times')
+      .mock(noop)
+      .withArguments(evidence)
+      .returnValue(encodedEvidence);
+    jack.expect('template.tmpl')
+      .mock(function(items) {
+        $.each(items, function(i, item) {
+          ok(item != null);
+          equals(encodedEvidence, item.evidence);
+        });
+        return template;
       });
+    jack.expect('template.appendTo')
+      .withArguments(resultsDiv);
 
     Popup.renderJSLintResults(false);
   });
 
   JSLINT.errors = null;
-});
-
-test('.formatError returns a new &lt;p&gt; element with the provided error information', function() {
-  var error = {
-    line: 1234,
-    character: 4321,
-    reason: "I don't like your face",
-    evidence: "document.getElementById('someElement').style.font-family = 'Comic Sans';"
-  };
-  var htmlEncoded = 'This is the html encoded string';
-  var expected = 'Problem at line ' + error.line + ', character ' +
-    error.character + '<br />Source: <span class="' + Popup.CODE_CSS_CLASS +
-    '">' + htmlEncoded + '</span><br />' + 'Problem: ' + error.reason +
-    '<br />';
-
-  jack(function() {
-    var p = jack.create('p', ['html']);
-
-    jack.expect('$')
-      .mock(noop)
-      .withArguments('<p></p>')
-      .returnValue(p);
-    jack.expect('p.html')
-      .withArguments(expected)
-      .returnValue(p);
-    jack.expect('Popup.htmlEncode')
-      .mock(noop)
-      .withArguments(error.evidence)
-      .returnValue(htmlEncoded);
-
-    same(p, Popup.formatError(error));
-  });
 });
 
 test('.fixRelativeUrl determines and returns the fully-qualified path for the given url', function() {
@@ -402,4 +378,8 @@ test('.getScriptBodyCallback runs jslint on the provided script body and renders
 
     Popup.getScriptBodyCallback(source);
   });
+});
+
+test('.cleanupJSLintResults removes any null items and html encodes the "evidence" values', function() {
+  
 });
