@@ -80,22 +80,29 @@ var Popup = {
     return $(Popup.DDL_SCRIPTS).val();
   },
 
+  cleanupJSLintResults: function(results) {
+    var ret = [];
+    $.each(results, function(i, item) {
+      if (item !== null) {
+        item.evidence = Popup.htmlEncode(item.evidence);
+        ret.push(item);
+      }
+    });
+    return ret;
+  },
+
   renderJSLintResults: function(result) {
     if (result === true) {
       return;
     }
 
-    var results = [], resultsDiv = $(Popup.DIV_RESULTS)
+    var resultsDiv = $(Popup.DIV_RESULTS)
       .css({display: 'block'})
       .html('<h2>Results:</h2>');
-    $.each(JSLINT.errors, function(i, item) {
-      if (item !== null) {
-        item.evidence = Popup.htmlEncode(item.evidence);
-        results.push(item);
-      }
-    });
 
-    $(Popup.TMPL_JSLINT_ERROR).tmpl(results).appendTo(resultsDiv);
+    $(Popup.TMPL_JSLINT_ERROR)
+      .tmpl(Popup.cleanupJSLintResults(JSLINT.errors))
+      .appendTo(resultsDiv);
   },
 
   btnJSLint_Click: function() {

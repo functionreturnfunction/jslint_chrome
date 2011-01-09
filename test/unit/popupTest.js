@@ -147,14 +147,7 @@ test('.renderJSLintResults does nothing if result is true, indicating that the s
 });
 
 test('.renderJSLintResults formats and appends each error to the output area if result is false, indicating that the script failed JSLint', function() {
-  var evidence = 'this is unencoded evidence';
-  var encodedEvidence = 'this is encoded evidence';
-  JSLINT.errors = [
-    {evidence: evidence},
-    {evidence: evidence},
-    {evidence: evidence},
-    null // will have nulls for some reason
-  ];
+  JSLINT.errors = new Object();
 
   jack(function() {
     var resultsDiv = jack.create('resultsDiv', ['css', 'html']);
@@ -175,19 +168,13 @@ test('.renderJSLintResults formats and appends each error to the output area if 
     jack.expect('$')
       .withArguments(Popup.TMPL_JSLINT_ERROR)
       .returnValue(template);
-    jack.expect('Popup.htmlEncode')
-      .exactly((JSLINT.errors.length - 1) + ' times')
+    jack.expect('Popup.cleanupJSLintResults')
       .mock(noop)
-      .withArguments(evidence)
-      .returnValue(encodedEvidence);
+      .withArguments(JSLINT.errors)
+      .returnValue(JSLINT.errors);
     jack.expect('template.tmpl')
-      .mock(function(items) {
-        $.each(items, function(i, item) {
-          ok(item != null);
-          equals(encodedEvidence, item.evidence);
-        });
-        return template;
-      });
+      .withArguments(JSLINT.errors)
+      .returnValue(template);
     jack.expect('template.appendTo')
       .withArguments(resultsDiv);
 
@@ -381,5 +368,26 @@ test('.getScriptBodyCallback runs jslint on the provided script body and renders
 });
 
 test('.cleanupJSLintResults removes any null items and html encodes the "evidence" values', function() {
-  
+  var evidence = 'this is unencoded evidence';
+  var encodedEvidence = 'this is encoded evidence';
+  var errors = [
+    {evidence: evidence},
+    {evidence: evidence},
+    {evidence: evidence},
+    null // will have nulls for some reason
+  ];
+
+  jack(function() {
+    jack.expect('Popup.htmlEncode')
+      .mock(noop)
+      .exactly((errors.length - 1) + ' times')
+      .withArguments(evidence)
+      .returnValue(encodedEvidence);
+
+    var result = Popup.cleanupJSLintResults(errors);
+    equals(errors.length - 1, result.length);
+    $.each(result, function(i, item) {
+      equals(encodedEvidence, item.evidence);
+    });
+  });
 });
