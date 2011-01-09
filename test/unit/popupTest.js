@@ -56,52 +56,46 @@ test('.getScripts sends a request to the given tab with the "getScripts" action 
   });
 });
 
-test('.getScriptsCallback calls .renderScriptUrls with the scripts attribute of the response object', function() {
+test('.getScriptsCallback calls .renderScriptUrls with the scripts attribute of the response object mapped to objects with a url property, fixing relative urls along the way', function() {
+  var scripts = ['foo', 'bar'];
+  var altered = ['fooAltered', 'barAltered']
   var response = {
-    scripts: new Object()
+    scripts: scripts
   };
+  var i = 0;
 
   jack(function() {
+    jack.expect('Popup.fixRelativeUrl')
+      .exactly(scripts.length + ' times')
+      .mock(function(item) {
+        equals(scripts[i], item);
+        return altered[i++];
+      });
     jack.expect('Popup.renderScriptUrls')
-      .mock(noop)
-      .withArguments(response.scripts);
+      .mock(function(items) {
+        equals(items[0].url, altered[0]);
+        equals(items[1].url, altered[1]);
+      });
 
     Popup.getScriptsCallback(response);
   });
 });
 
-test('.renderScriptUrls creates option elements and appends them to the scripts select for each script url passed in, fixing relative urls along the way', function() {
-  var scripts = ['foo', 'bar', 'baz'];
-  var altered = ['fooAltered', 'barAltered', 'bazAltered'];
-  var i = 0;
+test('.renderScriptUrls renders given url objects using the script url template into the scripts drop down', function() {
+  var scripts = new Object();
 
   jack(function() {
-    var option = jack.create('option', ['attr']);
-    var ddlScripts = jack.create('ddlScripts', ['append']);
+    var template = jack.create('template', ['tmpl', 'appendTo']);
 
     jack.expect('$')
-      .mock(noop)
-      .exactly('1 times')
-      .withArguments(Popup.DDL_SCRIPTS)
-      .returnValue(ddlScripts);
-    jack.expect('$')
-      .mock(noop)
-      .exactly(scripts.length + ' times')
-      .withArguments('<option></option>')
-      .returnValue(option);
-    jack.expect('Popup.fixRelativeUrl')
-      .exactly(scripts.length + ' times')
-      .mock(function(url) {
-        equals(scripts[i], url);
-        return altered[i];
-      });
-    jack.expect('option.attr')
-      .exactly(scripts.length + ' times')
-      .mock(function(opts) {
-        equals(altered[i++], opts.value);
-        equals(opts.value, opts.text);
-      });
-
+      .withArguments(Popup.TMPL_SCRIPT_URLS)
+      .returnValue(template);
+    jack.expect('template.tmpl')
+      .withArguments(scripts)
+      .returnValue(template);
+    jack.expect('template.appendTo')
+      .withArguments(Popup.DDL_SCRIPTS);
+    
     Popup.renderScriptUrls(scripts);
   });
 });

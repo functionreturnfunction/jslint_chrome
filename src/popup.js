@@ -22,13 +22,16 @@ var Popup = {
   DDL_SCRIPTS: '#script_urls',
   BTN_JSLINT: '#jslint',
   BTN_CANCEL: '#cancel',
+  TMPL_SCRIPT_URLS: '#script_url_tmpl',
   CODE_CSS_CLASS: 'code',
 
   tabId: null,
   tabUrl: null,
 
   getScriptsCallback: function(response) {
-    Popup.renderScriptUrls(response.scripts);
+    Popup.renderScriptUrls($.map(response.scripts, function(item) {
+      return {url: Popup.fixRelativeUrl(item)};
+    }));
   },
 
   getScriptBodyCallback: function(source) {
@@ -42,7 +45,7 @@ var Popup = {
   },
 
   getPagePath: function() {
-    return  $.url.setUrl(Popup.tabUrl).attr('directory');
+    return $.url.setUrl(Popup.tabUrl).attr('directory');
   },
 
   fixRelativeUrl: function(relativeUrl) {
@@ -63,12 +66,7 @@ var Popup = {
   },
 
   renderScriptUrls: function(urls) {
-    var ddlScripts = $(Popup.DDL_SCRIPTS);
-    $.each(urls, function(i, url) {
-      url = Popup.fixRelativeUrl(url);
-      ddlScripts.append($('<option></option>')
-                        .attr({text: url, value: url}));
-    });
+    $(Popup.TMPL_SCRIPT_URLS).tmpl(urls).appendTo(Popup.DDL_SCRIPTS);
   },
 
   getScripts: function(tab) {
@@ -113,13 +111,6 @@ var Popup = {
       success: Popup.getScriptBodyCallback
     });
   },
-
-  // btnJSLint_Click: function() {
-  //   Popup.renderJSLintResults(
-  //     JSLINT(
-  //       Popup.gatherScriptSource(
-  //         Popup.getChosenScriptUrl())));
-  // },
 
   btnCancel_Click: function() {
     window.close();

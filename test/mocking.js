@@ -25,6 +25,14 @@ $.each = function(arr, fn) {
   }
 };
 
+$.map = function(arr, fn) {
+  var ret = [];
+  $.each(arr, function(i, item) {
+    ret.push(fn(item, i));
+  });
+  return ret;
+}
+
 $.ajax = noop;
 
 $.url = {

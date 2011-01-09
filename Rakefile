@@ -21,29 +21,29 @@ LIBRARY_DIRECTORY = 'lib'
 SOURCE_FILES = {
   :content => "#{SOURCE_DIRECTORY}/#{SCRIPTS[:content]}",
   :copying => FILES[:copying],
-  :popup => "#{CONTENT_DIRECTORY}/#{FILES[:popup]}",
-  :popup_css => "#{CONTENT_DIRECTORY}/#{FILES[:popup_css]}",
-  :popup_js => "#{SOURCE_DIRECTORY}/#{SCRIPTS[:popup_js]}",
   :icon => "#{CONTENT_DIRECTORY}/#{FILES[:icon]}",
   :jslint => "#{LIBRARY_DIRECTORY}/#{LIBRARIES[:jslint]}",
   :jquery => "#{LIBRARY_DIRECTORY}/#{LIBRARIES[:jquery]}",
   :jquery_tmpl => "#{LIBRARY_DIRECTORY}/#{LIBRARIES[:jquery_tmpl]}",
   :jquery_url => "#{LIBRARY_DIRECTORY}/#{LIBRARIES[:jquery_url]}",
-  :manifest => "#{CONTENT_DIRECTORY}/#{FILES[:manifest]}"
+  :manifest => "#{CONTENT_DIRECTORY}/#{FILES[:manifest]}",
+  :popup => "#{CONTENT_DIRECTORY}/#{FILES[:popup]}",
+  :popup_css => "#{CONTENT_DIRECTORY}/#{FILES[:popup_css]}",
+  :popup_js => "#{SOURCE_DIRECTORY}/#{SCRIPTS[:popup_js]}"
 }
 OUTPUT_DIRECTORY = 'output'
 OUTPUT_FILES = {
   :copying => "#{OUTPUT_DIRECTORY}/#{FILES[:copying]}",
   :content => "#{OUTPUT_DIRECTORY}/#{SCRIPTS[:content]}",
-  :popup => "#{OUTPUT_DIRECTORY}/#{FILES[:popup]}",
-  :popup_css => "#{OUTPUT_DIRECTORY}/#{FILES[:popup_css]}",
-  :popup_js => "#{OUTPUT_DIRECTORY}/#{SCRIPTS[:popup_js]}",
   :icon => "#{OUTPUT_DIRECTORY}/#{FILES[:icon]}",
   :jslint => "#{OUTPUT_DIRECTORY}/#{LIBRARIES[:jslint]}",
   :jquery => "#{OUTPUT_DIRECTORY}/#{LIBRARIES[:jquery]}",
   :jquery_tmpl => "#{OUTPUT_DIRECTORY}/#{LIBRARIES[:jquery_tmpl]}",
   :jquery_url => "#{OUTPUT_DIRECTORY}/#{LIBRARIES[:jquery_url]}",
-  :manifest => "#{OUTPUT_DIRECTORY}/#{FILES[:manifest]}"
+  :manifest => "#{OUTPUT_DIRECTORY}/#{FILES[:manifest]}",
+  :popup => "#{OUTPUT_DIRECTORY}/#{FILES[:popup]}",
+  :popup_css => "#{OUTPUT_DIRECTORY}/#{FILES[:popup_css]}",
+  :popup_js => "#{OUTPUT_DIRECTORY}/#{SCRIPTS[:popup_js]}"
 }
 
 def build_script_file_with_listeners name, extra_call = nil
