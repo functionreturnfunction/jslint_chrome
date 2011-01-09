@@ -84,7 +84,8 @@ var Popup = {
     var ret = [];
     $.each(results, function(i, item) {
       if (item !== null) {
-        item.evidence = Popup.htmlEncode(item.evidence);
+        item.evidence = item.hasOwnProperty('evidence') ?
+          Popup.htmlEncode(item.evidence) : '<none>';
         ret.push(item);
       }
     });

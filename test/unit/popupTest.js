@@ -374,20 +374,22 @@ test('.cleanupJSLintResults removes any null items and html encodes the "evidenc
     {evidence: evidence},
     {evidence: evidence},
     {evidence: evidence},
+    {}, // last one may have no evidence
     null // will have nulls for some reason
   ];
 
   jack(function() {
     jack.expect('Popup.htmlEncode')
       .mock(noop)
-      .exactly((errors.length - 1) + ' times')
+      .exactly((errors.length - 2) + ' times')
       .withArguments(evidence)
       .returnValue(encodedEvidence);
 
     var result = Popup.cleanupJSLintResults(errors);
     equals(errors.length - 1, result.length);
     $.each(result, function(i, item) {
-      equals(encodedEvidence, item.evidence);
+      equals(i < (errors.length - 2) ? encodedEvidence : '<none>',
+             item.evidence);
     });
   });
 });
