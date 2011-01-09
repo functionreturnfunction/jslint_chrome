@@ -228,6 +228,7 @@ test('.formatError returns a new &lt;p&gt; element with the provided error infor
 });
 
 test('.fixRelativeUrl determines and returns the fully-qualified path for the given url', function() {
+  // relative from root
   var relativeUrl = '/path/to/someScript.js';
   var baseUrl = 'http://www.somesite.com';
   var expected = baseUrl + relativeUrl;
@@ -240,6 +241,7 @@ test('.fixRelativeUrl determines and returns the fully-qualified path for the gi
     equals(expected, Popup.fixRelativeUrl(relativeUrl));
   });
 
+  // relative from root
   relativeUrl = '//path/to/otherScript.js';
   expected = baseUrl + relativeUrl;
 
@@ -251,6 +253,7 @@ test('.fixRelativeUrl determines and returns the fully-qualified path for the gi
     equals(expected, Popup.fixRelativeUrl(relativeUrl));
   });
 
+  // not relative, explicit
   relativeUrl = 'http://www.somesite.com/someScript.js';
   expected = relativeUrl;
 
@@ -261,6 +264,7 @@ test('.fixRelativeUrl determines and returns the fully-qualified path for the gi
     equals(expected, Popup.fixRelativeUrl(relativeUrl));
   });
 
+  // relative using special chars
   var pagePath = '/theApp/someModule/';
   relativeUrl = '../../scripts/someScript.js';
   expected = baseUrl + pagePath + relativeUrl;
@@ -276,12 +280,17 @@ test('.fixRelativeUrl determines and returns the fully-qualified path for the gi
     equals(expected, Popup.fixRelativeUrl(relativeUrl));
   });
 
-  relativeUrl = 'https://www.somesite.com/someScript.js';
-  expected = relativeUrl;
+  // relative from current page path
+  relativeUrl = 'someScript.js';
+  expected = baseUrl + pagePath + relativeUrl;
 
   jack(function() {
     jack.expect('Popup.getBaseUrl')
-      .never();
+      .mock(noop)
+      .returnValue(baseUrl);
+    jack.expect('Popup.getPagePath')
+      .mock(noop)
+      .returnValue(pagePath);
 
     equals(expected, Popup.fixRelativeUrl(relativeUrl));
   });

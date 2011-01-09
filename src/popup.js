@@ -47,11 +47,11 @@ var Popup = {
   fixRelativeUrl: function(relativeUrl) {
     switch (true) {
       case /^https?:\/\//.test(relativeUrl):
-        return relativeUrl;        
-      case /^\.\./.test(relativeUrl):
-        return Popup.getBaseUrl() + Popup.getPagePath() + relativeUrl;
-      default:
+        return relativeUrl;
+      case /^\//.test(relativeUrl):
         return Popup.getBaseUrl() + relativeUrl;
+      default:
+        return Popup.getBaseUrl() + Popup.getPagePath() + relativeUrl;
     }
   },
 
