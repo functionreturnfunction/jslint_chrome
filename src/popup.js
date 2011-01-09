@@ -53,6 +53,8 @@ var Popup = {
     switch (true) {
       case /^https?:\/\//.test(relativeUrl):
         return relativeUrl;
+      case /^\/\//.test(relativeUrl):
+        return $.url.setUrl(Popup.tabUrl).attr('protocol') + ':' + relativeUrl;
       case /^\//.test(relativeUrl):
         return Popup.getBaseUrl() + relativeUrl;
       default:

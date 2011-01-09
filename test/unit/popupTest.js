@@ -199,16 +199,27 @@ test('.fixRelativeUrl determines and returns the fully-qualified path for the gi
   });
 
   // relative from root
+  var oldJQueryUrl = $.url;
+  var tabUrl = 'http://www.someothersite.com';
   relativeUrl = '//path/to/otherScript.js';
   expected = baseUrl + relativeUrl;
+  Popup.tabUrl = tabUrl;
 
   jack(function() {
-    jack.expect('Popup.getBaseUrl')
-      .mock(noop)
-      .returnValue(baseUrl);
+    $.url = jack.create('urlObj', ['setUrl', 'attr']);
 
-    equals(expected, Popup.fixRelativeUrl(relativeUrl));
+    jack.expect('urlObj.setUrl')
+      .withArguments(tabUrl)
+      .returnValue($.url);
+    jack.expect('urlObj.attr')
+      .withArguments('protocol')
+      .returnValue('http');
+
+    equals('http:' + relativeUrl, Popup.fixRelativeUrl(relativeUrl));
   });
+
+  $.url = oldJQueryUrl;
+  Popup.tabUrl = null;
 
   // not relative, explicit
   relativeUrl = 'http://www.somesite.com/someScript.js';
@@ -318,12 +329,11 @@ test('.getPagePath returns the url path of the current page', function() {
   Popup.tabUrl = url;
 
   jack(function() {
-    var urlObj = jack.create('urlObj', ['setUrl', 'attr']);
-    $.url = urlObj;
+    $.url = jack.create('urlObj', ['setUrl', 'attr']);
 
     jack.expect('urlObj.setUrl')
       .withArguments(url)
-      .returnValue(urlObj);
+      .returnValue($.url);
     jack.expect('urlObj.attr')
       .withArguments('directory')
       .returnValue(directory);
