@@ -30,5 +30,3 @@ $.ajax = noop;
 $.url = {
   setUrl: noop
 };
-
-var jQuery = $;
