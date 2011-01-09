@@ -36,8 +36,9 @@ var Popup = {
   },
 
   getBaseUrl: function() {
-    var url = $.url.setUrl(Popup.tabUrl);
-    return url.attr('protocol') + '://' + (url.attr('host') || '');
+    with ($.url.setUrl(Popup.tabUrl)) {
+      return attr('protocol') + '://' + (attr('host') || '');
+    }
   },
 
   getPagePath: function() {
