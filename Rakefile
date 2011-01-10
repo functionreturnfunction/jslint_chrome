@@ -6,15 +6,17 @@ LIBRARY_DIRECTORY = 'lib'
 OUTPUT_DIRECTORY = 'output'
 LIBRARIES = FileList["#{LIBRARY_DIRECTORY}/*"]
 FILES = FileList["#{CONTENT_DIRECTORY}/**/*"].include 'COPYING'
-SOURCE_FILES = LIBRARIES + FILES
-SCRIPTS = {
+SPECIAL_SCRIPTS = {
   :content => 'content.js',
   :popup_js => 'popup.js'
 }
-SCRIPT_INPUT = SCRIPTS \
+SCRIPT_INPUT = SPECIAL_SCRIPTS \
   .inject({}) {|memo, arr| memo[arr[0]] = "#{SOURCE_DIRECTORY}/#{arr[1]}"; memo}
-SCRIPT_OUTPUT = SCRIPTS \
+SCRIPT_OUTPUT = SPECIAL_SCRIPTS \
   .inject({}) {|memo, arr| memo[arr[0]] = "#{OUTPUT_DIRECTORY}/#{arr[1]}"; memo}
+SCRIPTS = FileList["#{SOURCE_DIRECTORY}/*"].exclude *(SCRIPT_INPUT.values)
+
+SOURCE_FILES = LIBRARIES + FILES + SCRIPTS
 
 directory OUTPUT_DIRECTORY
 
