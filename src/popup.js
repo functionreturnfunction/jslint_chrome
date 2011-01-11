@@ -50,8 +50,6 @@ $(function() {
     // what does result===true imply here?
     if (result === true) { return; }
 
-    alert(JSLINT.errors[0].reason);
-
     // $(selectors.resultsTemplate).tmpl(Utilities.cleanupJSLintResults(JSLINT.errors)).appendTo(selectors.resultsContainer);
     $(selectors.resultsTemplate).tmpl(JSLINT.errors).appendTo(selectors.resultsContainer);
 
