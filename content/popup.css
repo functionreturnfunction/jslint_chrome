@@ -33,10 +33,11 @@ body {
   #logo {
     font-size: 1.2em;
     line-height: 1.3em;
-    text-align: center;
+    text-align: right;
     min-width:200px;
     margin: 5px;
     padding: 0;
+    padding-right: 40px;
   }
 
   #button_close {
@@ -45,8 +46,8 @@ body {
     width: 16px;
     overflow: hidden;
     text-indent: -10000px;
-    top: 10px;
-    right: 10px;
+    top: 12px;
+    right: 12px;
     margin: 0;
     padding: 0;
     cursor: pointer;
@@ -72,7 +73,7 @@ body {
 
 #script_urls li {
   font-size: 12px;
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid #333;
 }
 
 #script_urls li a {
@@ -84,7 +85,7 @@ body {
   -webkit-transition: all .2s linear;
 }
 
-#script_urls li a:hover { background-color: #ace; }
+#script_urls li a:hover { background-color: #def; }
 
 
 /*** OPTIONS TAB ***/
