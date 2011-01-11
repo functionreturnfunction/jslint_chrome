@@ -28,26 +28,39 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 
     <div id="header">
       <h1 id="logo">JSLint for Chrome</h1>
-      <div id="close" class="scripts_loaded script_url cancel">Close</div>
+      <div id="button_close">Close</div>
     </div>
 
-    <div class="main">
+    <div id="content">
 
-      <ul id="script_urls" class="scripts_loaded">
+      <div id="lint_tabs">
 
-      </ul>
+        <ul>
+          <li><a href="#tab_scripts">Scripts</a></li>
+          <li><a href="#tab_options">Options</a></li>
+          <li><a href="#tab_results">Results</a></li>
+        </ul>
 
+        <div id="tab_scripts">
+          <ul id="script_urls"></ul>
+        </div> <!--tab_scripts -->
+ 
+        <div id="tab_options">
+          Options
+        </div> <!--tab_options -->
 
+        <div id="tab_results">
+          <h2>Results:</h2>
+          <div id="results"></div>
+        </div> <!--tab_results -->
 
-      <div class="no_scripts_loaded script_url cancel">No scripts loaded.</div>
+      </div><!-- lint_tabs -->
 
-      <div id="results">
-        <h2>Results:</h2>
-      </div>
-    </div>
+    </div> <!-- content -->
+
 
     <script type="text/x-jquery-tmpl" id="script_url_tmpl">
-      <li><a href="${url}">${url}</a></li>
+      <li><a class="script_url" href="${url}">${url}</a></li>
     </script>
 
     <script type="text/x-jquery-tmpl" id="jslint_error_tmpl">
@@ -64,6 +77,7 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
     <script type="text/javascript" src="jquery.url.js"></script>
     <script type="text/javascript" src="tabs.js"></script>
     <script type="text/javascript" src="fulljslint.js"></script>
+    <script type="text/javascript" src="utilities.js"></script>
     <script type="text/javascript" src="popup.js"></script>
 
   </body>
