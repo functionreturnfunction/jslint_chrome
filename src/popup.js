@@ -14,37 +14,39 @@ $(function() {
 
   /*** EVENT HANDLERS ***/
 
-  onClosePopup = function(e) {
+  var onClosePopup = function(e) {
     window.close();
   };
 
-  onScriptClicked = function(e) {
+  var onScriptClicked = function(e) {
     e.preventDefault();
     $.ajax({url:$(this).attr('href')});
   };
 
-  onGetPageScripts = function(response) {
-    var urls = $.map(response.scripts, function(item) { return {url: Utilities.fixRelativeUrl(item, tabUrl)}; })
+  var onPageScriptsCallback = function(response) {
+//    var urls = $.map(response.scripts, function(item) { return {url: Utilities.fixRelativeUrl(item, tabUrl)}; })
+    var urls = $.map(response.scripts, function(item) { return {url:item} });
     renderScriptUrls(urls);
   };
 
-  onScriptBodyAjaxCallback = function(source) {
+  var onScriptBodyAjaxCallback = function(source) {
     renderJSLintResults(JSLINT(source));
   };
 
   /*** METHODS ***/
 
-  getPageScripts = function(tab) {
+  var getPageScripts = function(tab) {
     tabUrl = tab.url;
     tabId = tab.id;
-    chrome.tabs.sendRequest(tab.id, {action: 'getScripts'}, onGetPageScripts);
+    chrome.tabs.sendRequest(tab.id, {action:'getScripts'}, onPageScriptsCallback);
   };
 
-  renderScriptUrls = function(urls) {
-    $(scriptTemplate).tmpl(urls).appendTo(scriptList)
+  var renderScriptUrls = function(urls) {
+    var x = $(selectors.scriptTemplate).tmpl(urls);
+    x.appendTo(selectors.scriptList);
   };
 
-  renderJSLintResults = function(results) {
+  var renderJSLintResults = function(result) {
     if (result === true) { return; }
     $(selectors.resultsTemplate).tmpl(Utilities.cleanupJSLintResults(JSLINT.errors)).appendTo(selectors.resultsContainer);
   };
