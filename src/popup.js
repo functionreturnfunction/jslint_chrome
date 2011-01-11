@@ -30,7 +30,8 @@ $(function() {
   };
 
   var onScriptBodyAjaxCallback = function(source) {
-    renderJSLintResults(JSLINT(source));
+    var result = JSLINT(source);
+    renderJSLintResults(result);
   };
 
   /*** METHODS ***/
@@ -42,13 +43,19 @@ $(function() {
   };
 
   var renderScriptUrls = function(urls) {
-    var x = $(selectors.scriptTemplate).tmpl(urls);
-    x.appendTo(selectors.scriptList);
+    $(selectors.scriptTemplate).tmpl(urls).appendTo(selectors.scriptList);
   };
 
   var renderJSLintResults = function(result) {
+    // what does result===true imply here?
     if (result === true) { return; }
-    $(selectors.resultsTemplate).tmpl(Utilities.cleanupJSLintResults(JSLINT.errors)).appendTo(selectors.resultsContainer);
+
+    alert(JSLINT.errors[0].reason);
+
+    // $(selectors.resultsTemplate).tmpl(Utilities.cleanupJSLintResults(JSLINT.errors)).appendTo(selectors.resultsContainer);
+    $(selectors.resultsTemplate).tmpl(JSLINT.errors).appendTo(selectors.resultsContainer);
+
+    // switch to results tab
   };
 
   /*** SET EVENTS ***/
