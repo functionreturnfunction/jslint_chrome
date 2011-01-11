@@ -23,17 +23,14 @@ directory OUTPUT_DIRECTORY
 OUTPUT_FILES = SOURCE_FILES.map do |file|
   outfile = OUTPUT_DIRECTORY + file.sub(/(.+\/)?([^\/])/, '/\2')
   file outfile => [OUTPUT_DIRECTORY] do
-    unless File.directory?(file)
-      puts "creating file #{outfile} from #{file}"
-      cp(file, outfile)
-    end
+    cp(file, outfile) unless File.directory?(file)
   end
 end
 
 CLOBBER.include OUTPUT_DIRECTORY
 
 def build_script_file_with_listeners name, extra_call = nil
-  puts "building #{SCRIPT_OUTPUT[name]}"
+  $stderr.puts "building #{SCRIPT_OUTPUT[name]}"
   open(SCRIPT_OUTPUT[name], 'w') do |outfile|
     outfile.puts '(function(){'
     open(SCRIPT_INPUT[name]) do |infile|
