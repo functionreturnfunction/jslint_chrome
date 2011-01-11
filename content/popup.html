@@ -18,22 +18,38 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <html>
+
   <head>
     <link rel="stylesheet" href="popup.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="tabs.css" type="text/css" media="screen" />
   </head>
+
   <body>
+
+    <div id="header">
+      <h1 id="logo">JSLint for Chrome</h1>
+      <div id="close" class="scripts_loaded script_url cancel">Close</div>
+    </div>
+
     <div class="main">
-      <h1>JSLint for Chrome</h1>
-      <div id="script_urls" class="scripts_loaded"></div>
+
+      <ul id="script_urls" class="scripts_loaded">
+
+      </ul>
+
+
+
       <div class="no_scripts_loaded script_url cancel">No scripts loaded.</div>
-      <div class="scripts_loaded script_url cancel">Cancel</div>
+
       <div id="results">
         <h2>Results:</h2>
       </div>
     </div>
+
     <script type="text/x-jquery-tmpl" id="script_url_tmpl">
-      <div class="script_url" value="${url}">${url}</div>
+      <li><a href="${url}">${url}</a></li>
     </script>
+
     <script type="text/x-jquery-tmpl" id="jslint_error_tmpl">
       <div>
         Problem at line ${line}, character ${character}<br />
@@ -42,10 +58,14 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
       </div>
     </script>
 
+
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="jquery.tmpl.js"></script>
     <script type="text/javascript" src="jquery.url.js"></script>
+    <script type="text/javascript" src="tabs.js"></script>
     <script type="text/javascript" src="fulljslint.js"></script>
     <script type="text/javascript" src="popup.js"></script>
+
   </body>
+
 </html>
