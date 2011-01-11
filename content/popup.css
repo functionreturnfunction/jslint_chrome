@@ -20,6 +20,7 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 body {
   background-color: #ffffff;
   font-family: helvetica, arial;
+  min-width: 300px;
 }
 
 
