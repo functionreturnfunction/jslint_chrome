@@ -105,11 +105,6 @@ div.main_div {
 
 /*** RESULTS TAB ***/
 
-
-#results {
-  display: none;
-}
-
 #results .code {
   font-family: monospace;
   margin-left: 5px;
