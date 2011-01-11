@@ -38,11 +38,11 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
       <option value="${url}">${url}</option>
     </script>
     <script type="text/x-jquery-tmpl" id="jslint_error_tmpl">
-      <p>
+      <div>
         Problem at line ${line}, character ${character}<br />
-        Source: <span class="code">${evidence}</span><br />
+        Source: <div class="code">${evidence}</div><br />
         Problem: ${reason}<br />
-      </p>
+      </div>
     </script>
 
     <script type="text/javascript" src="jquery.js"></script>

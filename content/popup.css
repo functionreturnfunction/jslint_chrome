@@ -38,8 +38,13 @@ div#results {
   display: none;
 }
 
-span.code {
+div.code {
   font-family: monospace;
+  margin-left: 5px;
+  margin-right: 5px;
+  border: 1px solid black;
+  padding: 5px;
+  overflow-x: scroll;
 }
 
 .scripts_loaded {
