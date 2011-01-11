@@ -23,32 +23,37 @@ body {
 }
 
 
+/*** HEADER ***/
+
 #header {
   border-bottom: 2px solid #222;
 }
 
-#logo {
-  font-size: 1.2em;
-  line-height: 1.3em;
-  text-align: center;
-  min-width:200px;
-  margin: 5px;
-  padding: 0;
-}
+  #logo {
+    font-size: 1.2em;
+    line-height: 1.3em;
+    text-align: center;
+    min-width:200px;
+    margin: 5px;
+    padding: 0;
+  }
 
-#close {
-  position: absolute;
-  height: 16px;
-  width: 16px;
-  overflow: hidden;
-  text-indent: -10000px;
-  top: 10px;
-  right: 10px;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-  background: url(close.png) 0 0 no-repeat;
-}
+  #button_close {
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    overflow: hidden;
+    text-indent: -10000px;
+    top: 10px;
+    right: 10px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    background: url(close.png) 0 0 no-repeat;
+  }
+
+
+/*** MAIN CONTENT ***/
 
 
 div.main_div {
@@ -57,27 +62,10 @@ div.main_div {
   overflow-y: hidden;
 }
 
-div.cancel {
-  text-align: center;
-}
-
-div#results {
-  display: none;
-}
-
-div.code {
-  font-family: monospace;
-  margin-left: 5px;
-  margin-right: 5px;
-  border: 1px solid black;
-  padding: 5px;
-  overflow-x: auto;
-  background-color: white;
-}
-
 
 
 /*** SCRIPTS TAB ***/
+
 
 #script_url {
   -webkit-user-select: none;
@@ -106,3 +94,28 @@ div.code {
 .scripts_loaded {
   display: none;
 }
+
+
+/*** OPTIONS TAB ***/
+
+
+
+
+
+/*** RESULTS TAB ***/
+
+
+#results {
+  display: none;
+}
+
+#results .code {
+  font-family: monospace;
+  margin-left: 5px;
+  margin-right: 5px;
+  border: 1px solid black;
+  padding: 5px;
+  overflow-x: auto;
+  background-color: white;
+}
+
