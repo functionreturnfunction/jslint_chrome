@@ -24,9 +24,11 @@ $(function() {
   var selectors = {
     buttonClose: '#button_close',
     tabElement: '#lint_tabs',
+    scriptTab: '#tab_scripts',
     scriptList: '#script_urls',
     scriptUrl: '#script_urls a',
     scriptTemplate : '#script_url_tmpl',
+    resultsTab : '#tab_results',
     resultsContainer : '#results',
     resultsTemplate : '#jslint_error_tmpl'
   };
@@ -73,6 +75,7 @@ $(function() {
     $(selectors.resultsTemplate).tmpl(JSLINT.errors).appendTo(selectors.resultsContainer);
 
     // switch to results tab
+    $(selectors.tabElement).tabs('navTo', selectors.resultsTab);
   };
 
   /*** SET EVENTS ***/
