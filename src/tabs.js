@@ -20,11 +20,19 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 
   $.fn.tabs = function() {
     return $(this).each(function(){
-
       var $this = $(this).addClass('ui-tab');
-      var $navs = $this.find('> ul > li');
-      var $panes = $this.find('> div');
-    }
+      var $navs = $this.find('> ul > li').addClass('ui-nav');
+      var $panes = $this.find('> div').addClass('ui-pane');
+
+      $navs.find('a').click(function(e){
+        e.stopPropagation();
+        var i = $navs.index($(this).parent());
+        $navs.removeClass('ui-active').eq(i).addClass('ui-active');
+        $panes.removeClass('ui-active').eq(i).addClass('ui-active');
+      }).eq(0).click();
+
+    })
   }
 
 })(jQuery);
+
