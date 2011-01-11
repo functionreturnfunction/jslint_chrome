@@ -1,0 +1,76 @@
+/*
+Copyright 2011 Jason Duncan, Nicholas Ortenzio
+
+This file is part of the JSLint Extension for Google Chrome.
+
+The JSLint Extension for Google Chrome is free software: you can redistribute it
+and/or modify it under the terms of the GNU General Public License as published
+by the Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+The JSLint Extension for Google Chrome is distributed in the hope that it will
+be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+License for more details.
+
+You should have received a copy of the GNU General Public License along with the
+JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.ui-tab {
+  margin:0;
+  padding:0;
+}
+
+.ui-tab > ul {
+  float:right;
+  position:relative;
+  list-style-type: none;
+  clear:both;
+  margin: 5px;
+}
+
+.ui-tab > ul:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.ui-tab > ul > li.ui-nav {
+  float:left;
+  font-family: helvetica, arial;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.ui-tab > ul > li.ui-nav > a {
+  color: #888;
+  border-bottom: 3px solid #fff;
+  display:block;
+  padding: 5px 10px;
+  text-decoration: none;
+  -webkit-transition: all .2s linear;
+}
+
+.ui-tab > ul > li.ui-nav > a:hover {
+  border-color: #333;
+}
+
+.ui-tab > ul > li.ui-nav.ui-active > a {
+  color: #333;
+  border-color: #333;
+}
+
+.ui-tab > div.ui-pane {
+  clear:both;
+  position: relative;
+  display:none;
+  -webkit-transition: all .5s linear;
+}
+
+.ui-tab > div.ui-pane.ui-active {
+  display:block;
+}
