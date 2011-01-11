@@ -56,7 +56,7 @@ test('.getScripts sends a request to the given tab with the "getScripts" action 
   });
 });
 
-test('.getScriptsCallback calls .renderScriptUrls with the scripts attribute of the response object mapped to objects with a url property, fixing relative urls along the way', function() {
+test('.getScriptsCallback calls .renderScriptUrls with the scripts attribute of the response object mapped to objects with a url property, fixing relative urls along the way, then shows the scripts_loaded controls', function() {
   var scripts = ['foo', 'bar'];
   var altered = ['fooAltered', 'barAltered']
   var response = {
@@ -65,6 +65,17 @@ test('.getScriptsCallback calls .renderScriptUrls with the scripts attribute of 
   var i = 0;
 
   jack(function() {
+    var scriptsLoaded = jack.create('scriptsLoaded', ['show']);
+    var noScriptsLoaded = jack.create('noScriptsLoaded', ['hide']);
+
+    jack.expect('$')
+      .withArguments(Popup.SCRIPTS_LOADED)
+      .returnValue(scriptsLoaded);
+    jack.expect('scriptsLoaded.show');
+    jack.expect('$')
+      .withArguments(Popup.NO_SCRIPTS_LOADED)
+      .returnValue(noScriptsLoaded);
+    jack.expect('noScriptsLoaded.hide');
     jack.expect('Popup.fixRelativeUrl')
       .exactly(scripts.length + ' times')
       .mock(function(item) {
@@ -150,7 +161,7 @@ test('.renderJSLintResults formats and appends each error to the output area if 
   JSLINT.errors = new Object();
 
   jack(function() {
-    var resultsDiv = jack.create('resultsDiv', ['css', 'html']);
+    var resultsDiv = jack.create('resultsDiv', ['show', 'html']);
     var template = jack.create('template', ['tmpl', 'appendTo'])
 
     jack.expect('$')
@@ -160,11 +171,8 @@ test('.renderJSLintResults formats and appends each error to the output area if 
     jack.expect('resultsDiv.html')
       .withArguments('<h2>Results:</h2>')
       .returnValue(resultsDiv);
-    jack.expect('resultsDiv.css')
-      .mock(function(opts) {
-        equals('block', opts.display);
-        return resultsDiv;
-      });
+    jack.expect('resultsDiv.show')
+      .returnValue(resultsDiv);
     jack.expect('$')
       .withArguments(Popup.TMPL_JSLINT_ERROR)
       .returnValue(template);

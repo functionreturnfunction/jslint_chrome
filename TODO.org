@@ -1,5 +1,4 @@
 * Version 1.0
-** TODO Filter out file:// urls.  They just won't work for now.
 ** TODO Perhaps modify the labels to only display the file name, file name + querystring, or the url without the protocol and host
 ** TODO Decide upon the best format for error output in the popup
 ** TODO Determine if the closures are necessary

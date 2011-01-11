@@ -24,12 +24,16 @@ var Popup = {
   BTN_CANCEL: '#cancel',
   TMPL_SCRIPT_URLS: '#script_url_tmpl',
   TMPL_JSLINT_ERROR: '#jslint_error_tmpl',
+  SCRIPTS_LOADED: '.scripts_loaded',
+  NO_SCRIPTS_LOADED: '.no_scripts_loaded',
   CODE_CSS_CLASS: 'code',
 
   tabId: null,
   tabUrl: null,
 
   getScriptsCallback: function(response) {
+    $(Popup.SCRIPTS_LOADED).show();
+    $(Popup.NO_SCRIPTS_LOADED).hide();
     Popup.renderScriptUrls($.map(response.scripts, function(item) {
       return {url: Popup.fixRelativeUrl(item)};
     }));
@@ -100,7 +104,7 @@ var Popup = {
     }
 
     var resultsDiv = $(Popup.DIV_RESULTS)
-      .css({display: 'block'})
+      .show()
       .html('<h2>Results:</h2>');
 
     $(Popup.TMPL_JSLINT_ERROR)

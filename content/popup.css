@@ -41,3 +41,7 @@ div#results {
 span.code {
   font-family: monospace;
 }
+
+.scripts_loaded {
+  display: none;
+}
