@@ -17,11 +17,9 @@ You should have received a copy of the GNU General Public License along with the
 JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-$(function() {
-
+var Popup = {
   /*** ELEMENT SELECTORS ***/
-
-  var selectors = {
+  selectors: {
     buttonClose: '#button_close',
     tabElement: '#lint_tabs',
     scriptTab: '#tab_scripts',
@@ -31,43 +29,42 @@ $(function() {
     resultsTab : '#tab_results',
     resultsContainer : '#results',
     resultsTemplate : '#jslint_error_tmpl'
-  };
+  },
 
   /*** EVENT HANDLERS ***/
-
-  var onClosePopup = function(e) {
+  onClosePopup: function(e) {
     window.close();
-  };
+  },
 
-  var onScriptClicked = function(e) {
+  onScriptClicked: function(e) {
     e.preventDefault();
     $.ajax({url:$(this).attr('href')});
-  };
+  },
 
-  var onPageScriptsCallback = function(response) {
+  onPageScriptsCallback: function(response) {
 //    var urls = $.map(response.scripts, function(item) { return {url: Utilities.fixRelativeUrl(item, tabUrl)}; })
     var urls = $.map(response.scripts, function(item) { return {url:item} });
     renderScriptUrls(urls);
-  };
+  },
 
-  var onScriptBodyAjaxCallback = function(source) {
+  onScriptBodyAjaxCallback: function(source) {
     var result = JSLINT(source);
     renderJSLintResults(result);
-  };
+  },
 
   /*** METHODS ***/
-
-  var getPageScripts = function(tab) {
+  getPageScripts: function(tab) {
     tabUrl = tab.url;
     tabId = tab.id;
-    chrome.tabs.sendRequest(tab.id, {action:'getScripts'}, onPageScriptsCallback);
-  };
+    chrome.tabs.sendRequest(
+      tab.id, {action:'getScripts'}, Popup.onPageScriptsCallback);
+  },
 
-  var renderScriptUrls = function(urls) {
+  renderScriptUrls: function(urls) {
     $(selectors.scriptTemplate).tmpl(urls).appendTo(selectors.scriptList);
-  };
+  },
 
-  var renderJSLintResults = function(result) {
+  renderJSLintResults: function(result) {
     // what does result===true imply here?
     if (result === true) { return; }
 
@@ -76,18 +73,23 @@ $(function() {
 
     // switch to results tab
     $(selectors.tabElement).tabs('navTo', selectors.resultsTab);
-  };
+  },
 
   /*** SET EVENTS ***/
-
-  $(selectors.buttonClose).click(onClosePopup);
-  $(selectors.scriptUrl).live('click', onScriptClicked);
+  initializeEvents: function() {
+    $(Popup.selectors.buttonClose).click(Popup.onClosePopup);
+    $(Popup.selectors.scriptUrl).live('click', Popup.onScriptClicked);
+  },
 
   /*** INITIALIZE ***/
-  
-  var tabId, tabUrl;
-  $.ajaxSetup({ type:'GET', dataType:'text', success:onScriptBodyAjaxCallback });
-  $(selectors.tabElement).tabs();
-  chrome.tabs.getSelected(null, getPageScripts);
 
-});
+  initialize: function() {
+    $.ajaxSetup({
+      type: 'GET',
+      dataType: 'text',
+      success: Popup.onScriptBodyAjaxCallback
+    });
+    $(Popup.selectors.tabElement).tabs();
+    chrome.tabs.getSelected(null, Popup.getPageScripts);
+  }
+};

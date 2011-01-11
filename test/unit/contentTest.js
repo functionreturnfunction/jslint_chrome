@@ -23,11 +23,11 @@ test('listenerCallback sends response with result from getPageScripts when reque
   };
 
   jack(function() {
-    jack.expect('getPageScripts')
+    jack.expect('Content.getPageScripts')
       .mock(noop)
       .returnValue(pageScripts);
 
-    listenerCallback(request, null, sendResponse);
+    Content.listenerCallback(request, null, sendResponse);
   });
   
   ok(sendResponseCalled);
@@ -44,7 +44,7 @@ test('listenerCallback logs request data to console if request action is "consol
       .mock(noop)
       .withArguments(request.data);
 
-    listenerCallback(request, null, null);
+    Content.listenerCallback(request, null, null);
   });
 });
 
@@ -61,7 +61,7 @@ test('getPageScripts returns array of src attributes for all scripts in the curr
       .withArguments('script')
       .returnValue(scripts);
 
-    retVal = getPageScripts();
+    retVal = Content.getPageScripts();
   });
 
   equals(2, retVal.length);
@@ -73,8 +73,8 @@ test('initialize adds listenerCallback as an event handler for chrome.extension.
   jack(function() {
     jack.expect('chrome.extension.onRequest.addListener')
       .mock(noop)
-      .withArguments(listenerCallback);
+      .withArguments(Content.listenerCallback);
 
-    initialize();
+    Content.initialize();
   });
 });

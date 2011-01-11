@@ -1,29 +1,43 @@
 loadScriptDynamically('../../src/popup.js');
 module('Popup Script');
 
-test('.initialize uses the chrome.tabs api to call .getScripts with the current tab, and calls Popup.initializeEvents', function() {
+test('.initialize sets up jquery ajax defaults, sets up the tabs, initializes event handlers, and uses the chrome.tabs api to call .getScripts with the current tab', function() {
   jack(function() {
+    var tabElement = jack.create('tabElement', ['tabs']);
+
+    jack.expect('$.ajaxSetup')
+      .mock(function(opts) {
+        equals('GET', opts.type);
+        equals('text', opts.dataType);
+        same(Popup.onScriptBodyAjaxCallback, opts.success);
+      });
+    jack.expect('$')
+      .withArguments(Popup.selectors.tabElement)
+      .returnValue(tabElement);
+    jack.expect('tabElement.tabs');
     jack.expect('chrome.tabs.getSelected')
-      .mock(noop)
-      .withArguments(null, Popup.getScripts);
-    jack.expect('Popup.initializeEvents')
-      .mock(noop);
+      .withArguments(null, Popup.getPageScripts);
 
     Popup.initialize();
   });
 });
 
-test('.initializeEvents initializes the click event handlers for the JSLint and Cancel buttons', function() {
+test('.initializeEvents initializes the click event handlers for the close buttons and script urls', function() {
   jack(function() {
-    var btnCancel = jack.create('btnCancel', ['click']);
+    var buttonClose = jack.create('buttonClose', ['click']);
+    var scriptUrl = jack.create('scriptUrl', ['live']);
 
     jack.expect('$')
-      .mock(noop)
-      .withArguments(Popup.BTN_CANCEL)
-      .returnValue(btnCancel);
-    jack.expect('btnCancel.click')
-      .withArguments(Popup.btnCancel_Click);
-    
+      .withArguments(Popup.selectors.buttonClose)
+      .returnValue(buttonClose);
+    jack.expect('buttonClose.click')
+      .withArguments(Popup.onClosePopup);
+    jack.expect('$')
+      .withArguments(Popup.selectors.scriptUrl)
+      .returnValue(scriptUrl);
+    jack.expect('scriptUrl.live')
+      .withArguments('click', Popup.onScriptClicked);
+
     Popup.initializeEvents();
   });
 });
