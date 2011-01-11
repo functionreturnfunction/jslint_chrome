@@ -57,14 +57,6 @@ body {
 /*** MAIN CONTENT ***/
 
 
-div.main_div {
-  height: 70px;
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-
-
 /*** SCRIPTS TAB ***/
 
 
@@ -80,21 +72,19 @@ div.main_div {
 
 #script_urls li {
   font-size: 12px;
-  padding: 10px 5px;
+  border-bottom: 1px solid #aaa;
 }
 
-#script_urls li:nth-Child(odd) { background: #fafafa; }
-#script_urls li:nth-Child(even) { background: #eee; }
-
 #script_urls li a {
+  padding: 5px;
   text-decoration: none;
   color: #333;
   display: block;
+  background: #fff;
+  -webkit-transition: all .2s linear;
 }
 
-.scripts_loaded {
-  display: none;
-}
+#script_urls li a:hover { background-color: #ace; }
 
 
 /*** OPTIONS TAB ***/
@@ -107,6 +97,7 @@ div.main_div {
 
 #results .code {
   font-family: monospace;
+  font-size: 12px;
   margin-left: 5px;
   margin-right: 5px;
   border: 1px solid black;
