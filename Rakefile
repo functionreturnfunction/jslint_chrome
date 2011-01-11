@@ -32,12 +32,11 @@ CLOBBER.include OUTPUT_DIRECTORY
 def build_script_file_with_listeners name, extra_call = nil
   $stderr.puts "building #{SCRIPT_OUTPUT[name]}"
   open(SCRIPT_OUTPUT[name], 'w') do |outfile|
-    outfile.puts '(function(){'
     open(SCRIPT_INPUT[name]) do |infile|
       infile.each {|line| outfile.puts(line) }
     end
     outfile.puts extra_call if !extra_call.nil?
-    outfile.puts '})();'
+
   end
 end
 
@@ -46,7 +45,7 @@ file SCRIPT_OUTPUT[:content] => [OUTPUT_DIRECTORY] do
 end
 
 file SCRIPT_OUTPUT[:popup_js] => [OUTPUT_DIRECTORY] do
-  build_script_file_with_listeners :popup_js, 'Popup.initialize();'
+  build_script_file_with_listeners :popup_js, ''
 end
 
 task :build => [:clobber].concat(OUTPUT_FILES + SCRIPT_OUTPUT.values)
