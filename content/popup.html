@@ -24,18 +24,17 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
   <body>
     <div class="main">
       <h1>JSLint for Chrome</h1>
-      <select id="script_urls" class="scripts_loaded"></select>
-      <input type="button" id="jslint" value="JSLint" class="scripts_loaded" />
-      <span class="no_scripts_loaded">
+      <div id="script_urls" class="scripts_loaded"></div>
+      <div class="no_scripts_loaded script_url">
         No scripts loaded.
-      </span>
-      <input type="button" id="cancel" value="Cancel" />
+      </div>
+      <div id="cancel" class="scripts_loaded script_url">Cancel</div>
       <div id="results">
         <h2>Results:</h2>
       </div>
     </div>
     <script type="text/x-jquery-tmpl" id="script_url_tmpl">
-      <option value="${url}">${url}</option>
+      <div class="script_url" value="${url}">${url}</div>
     </script>
     <script type="text/x-jquery-tmpl" id="jslint_error_tmpl">
       <div>

@@ -17,6 +17,10 @@ You should have received a copy of the GNU General Public License along with the
 JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+body {
+  background-color: #ccc;
+}
+
 h1 {
   font-family: helvetica;
   font-size: 1.2em;
@@ -32,6 +36,26 @@ div.main_div {
   height: 70px;
   overflow-x: auto;
   overflow-y: hidden;
+}
+
+div#script_urls {
+  margin: 0px;
+  padding: 0px;
+}
+
+div.script_url {
+  margin: 5px;
+  padding: 5px;
+  -webkit-user-select: none;
+}
+
+div.script_url:hover {
+  background-color: #aaa;
+  cursor: pointer;
+}
+
+div#cancel {
+  text-align: center;
 }
 
 div#results {

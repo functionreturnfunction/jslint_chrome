@@ -92,7 +92,7 @@ test('.getScriptsCallback calls .renderScriptUrls with the scripts attribute of 
   });
 });
 
-test('.renderScriptUrls renders given url objects using the script url template into the scripts drop down', function() {
+test('.renderScriptUrls renders given url objects using the script url template into script controls and wires the event handler for them', function() {
   var scripts = new Object();
 
   jack(function() {
@@ -105,7 +105,7 @@ test('.renderScriptUrls renders given url objects using the script url template 
       .withArguments(scripts)
       .returnValue(template);
     jack.expect('template.appendTo')
-      .withArguments(Popup.DDL_SCRIPTS);
+      .withArguments(Popup.DIV_SCRIPTS);
     
     Popup.renderScriptUrls(scripts);
   });

@@ -19,7 +19,7 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 
 var Popup = {
   DIV_RESULTS: '#results',
-  DDL_SCRIPTS: '#script_urls',
+  DIV_SCRIPTS: '#script_urls',
   BTN_JSLINT: '#jslint',
   BTN_CANCEL: '#cancel',
   TMPL_SCRIPT_URLS: '#script_url_tmpl',
@@ -73,7 +73,7 @@ var Popup = {
   },
 
   renderScriptUrls: function(urls) {
-    $(Popup.TMPL_SCRIPT_URLS).tmpl(urls).appendTo(Popup.DDL_SCRIPTS);
+    $(Popup.TMPL_SCRIPT_URLS).tmpl(urls).appendTo(Popup.DIV_SCRIPTS);
   },
 
   getScripts: function(tab) {
