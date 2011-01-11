@@ -69,6 +69,8 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
   position: relative;
   display:none;
   -webkit-transition: all .5s linear;
+  max-height: 500px;
+  overflow: auto;
 }
 
 .ui-tab > div.ui-pane.ui-active {
