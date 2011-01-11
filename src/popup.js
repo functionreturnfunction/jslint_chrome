@@ -20,8 +20,8 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 var Popup = {
   DIV_RESULTS: '#results',
   DIV_SCRIPTS: '#script_urls',
-  BTN_JSLINT: '#jslint',
-  BTN_CANCEL: '#cancel',
+  BTN_JSLINT: '.script_url',
+  BTN_CANCEL: '.cancel',
   TMPL_SCRIPT_URLS: '#script_url_tmpl',
   TMPL_JSLINT_ERROR: '#jslint_error_tmpl',
   SCRIPTS_LOADED: '.scripts_loaded',
@@ -74,16 +74,13 @@ var Popup = {
 
   renderScriptUrls: function(urls) {
     $(Popup.TMPL_SCRIPT_URLS).tmpl(urls).appendTo(Popup.DIV_SCRIPTS);
+    $(Popup.BTN_JSLINT).click(Popup.btnJSLint_Click);
   },
 
   getScripts: function(tab) {
     Popup.tabUrl = tab.url;
     chrome.tabs.sendRequest((Popup.tabId = tab.id), {action: 'getScripts'},
                             Popup.getScriptsCallback);
-  },
-
-  getChosenScriptUrl: function() {
-    return $(Popup.DDL_SCRIPTS).val();
   },
 
   cleanupJSLintResults: function(results) {
@@ -114,7 +111,7 @@ var Popup = {
 
   btnJSLint_Click: function() {
     $.ajax({
-      url: Popup.getChosenScriptUrl(),
+      url: $(this).text(),
       type: 'GET',
       dataType: 'text',
       success: Popup.getScriptBodyCallback
@@ -126,7 +123,6 @@ var Popup = {
   },
 
   initializeEvents: function() {
-    $(Popup.BTN_JSLINT).click(Popup.btnJSLint_Click);
     $(Popup.BTN_CANCEL).click(Popup.btnCancel_Click);
   },
 

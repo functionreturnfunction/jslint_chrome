@@ -15,19 +15,12 @@ test('.initialize uses the chrome.tabs api to call .getScripts with the current 
 
 test('.initializeEvents initializes the click event handlers for the JSLint and Cancel buttons', function() {
   jack(function() {
-    var btnJSLint = jack.create('btnJSLint', ['click']);
     var btnCancel = jack.create('btnCancel', ['click']);
 
     jack.expect('$')
       .mock(noop)
-      .withArguments(Popup.BTN_JSLINT)
-      .returnValue(btnJSLint);
-    jack.expect('$')
-      .mock(noop)
       .withArguments(Popup.BTN_CANCEL)
       .returnValue(btnCancel);
-    jack.expect('btnJSLint.click')
-      .withArguments(Popup.btnJSLint_Click);
     jack.expect('btnCancel.click')
       .withArguments(Popup.btnCancel_Click);
     
@@ -97,6 +90,7 @@ test('.renderScriptUrls renders given url objects using the script url template 
 
   jack(function() {
     var template = jack.create('template', ['tmpl', 'appendTo']);
+    var scriptUrls = jack.create('scriptUrls', ['click']);
 
     jack.expect('$')
       .withArguments(Popup.TMPL_SCRIPT_URLS)
@@ -106,26 +100,13 @@ test('.renderScriptUrls renders given url objects using the script url template 
       .returnValue(template);
     jack.expect('template.appendTo')
       .withArguments(Popup.DIV_SCRIPTS);
+    jack.expect('$')
+      .withArguments(Popup.BTN_JSLINT)
+      .returnValue(scriptUrls);
+    jack.expect('scriptUrls.click')
+      .withArguments(Popup.btnJSLint_Click);
     
     Popup.renderScriptUrls(scripts);
-  });
-});
-
-test('.getChosenScriptUrl returns the chosen script url from the drop down list', function() {
-  var url = 'this is the chosen script url';
-
-  jack(function() {
-    var ddlScripts = jack.create('ddlScripts', ['val']);
-
-    jack.expect('$')
-      .mock(noop)
-      .withArguments(Popup.DDL_SCRIPTS)
-      .returnValue(ddlScripts);
-    jack.expect('ddlScripts.val')
-      .mock(noop)
-      .returnValue(url);
-
-    equals(url, Popup.getChosenScriptUrl());
   });
 });
 
@@ -133,8 +114,12 @@ test('.btnJSLint_Click makes an ajax request to the chosen script url using Popu
   var url = 'this is the chosen script url';
 
   jack(function() {
-    jack.expect('Popup.getChosenScriptUrl')
-      .mock(noop)
+    var scriptUrl = jack.create('scriptUrl', ['text']);
+
+    jack.expect('$')
+      .withArguments(scriptUrl)
+      .returnValue(scriptUrl);
+    jack.expect('scriptUrl.text')
       .returnValue(url);
     jack.expect('$.ajax')
       .mock(function (opts) {
@@ -144,7 +129,7 @@ test('.btnJSLint_Click makes an ajax request to the chosen script url using Popu
         equals(Popup.getScriptBodyCallback, opts.success);
       });
 
-    Popup.btnJSLint_Click();
+    Popup.btnJSLint_Click.call(scriptUrl);
   });
 });
 

@@ -54,7 +54,7 @@ div.script_url:hover {
   cursor: pointer;
 }
 
-div#cancel {
+div.cancel {
   text-align: center;
 }
 
@@ -68,7 +68,8 @@ div.code {
   margin-right: 5px;
   border: 1px solid black;
   padding: 5px;
-  overflow-x: scroll;
+  overflow-x: auto;
+  background-color: white;
 }
 
 .scripts_loaded {
