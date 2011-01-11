@@ -72,8 +72,7 @@ body {
 }
 
 #script_urls li {
-  font-size: 12px;
-  border-bottom: 1px solid #333;
+  font-size: 11px;
 }
 
 #script_urls li a {
@@ -82,10 +81,13 @@ body {
   color: #333;
   display: block;
   background: #fff;
-  -webkit-transition: all .2s linear;
+  overflow:hidden;
 }
 
-#script_urls li a:hover { background-color: #def; }
+#script_urls li a:hover { 
+  background-color: #333; 
+  color: #fff;
+}
 
 
 /*** OPTIONS TAB ***/
@@ -99,8 +101,8 @@ body {
 #results .code {
   font-family: monospace;
   font-size: 12px;
-  margin-left: 5px;
-  margin-right: 5px;
+  width: 82em;
+  margin: 0 1em;
   border: 1px solid black;
   padding: 5px;
   overflow-x: auto;
