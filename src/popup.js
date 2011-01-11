@@ -17,77 +17,141 @@ You should have received a copy of the GNU General Public License along with the
 JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-$(function() {
+var Popup = { 
+  initialize: function(e){ chrome.tabs.getSelected(null, Popup.methods.getPageScripts); },
+  tab: null
+};
 
-  /*** ELEMENT SELECTORS ***/
 
-  var selectors = {
-    buttonClose: '#button_close',
-    tabElement: '#lint_tabs',
-    scriptTab: '#tab_scripts',
-    scriptList: '#script_urls',
-    scriptUrl: '#script_urls a',
-    scriptTemplate : '#script_url_tmpl',
-    resultsTab : '#tab_results',
-    resultsContainer : '#results',
-    resultsTemplate : '#jslint_error_tmpl'
-  };
+/*** ELEMENT SELECTORS ***/
 
-  /*** EVENT HANDLERS ***/
+Popup.selectors = {
+  buttonClose: '#button_close',
+  tabElement: '#lint_tabs',
+  scriptTab: '#tab_scripts',
+  scriptList: '#script_urls',
+  scriptUrl: '#script_urls a',
+  scriptTemplate : '#script_url_tmpl',
+  resultsTab : '#tab_results',
+  resultsContainer : '#results',
+  resultsTemplate : '#jslint_error_tmpl'
+};
 
-  var onClosePopup = function(e) {
+
+/*** EVENT HANDLERS ***/
+
+Popup.callbacks = {
+
+  onClosePopup : function(e) {
     window.close();
-  };
+  },
 
-  var onScriptClicked = function(e) {
+  onScriptClicked : function(e) {
     e.preventDefault();
     $.ajax({url:$(this).attr('href')});
-  };
+  },
 
-  var onPageScriptsCallback = function(response) {
-//    var urls = $.map(response.scripts, function(item) { return {url: Utilities.fixRelativeUrl(item, tabUrl)}; })
+  onPageScriptsCallback : function(response) {
+    //  var urls = $.map(response.scripts, function(item) { return {url: Popup.utilities.fixRelativeUrl(item, Popup.tab.url)}; })
     var urls = $.map(response.scripts, function(item) { return {url:item} });
-    renderScriptUrls(urls);
-  };
+    Popup.methods.renderScriptUrls(urls);
+  },
 
-  var onScriptBodyAjaxCallback = function(source) {
+  onScriptBodyAjaxCallback : function(source) {
     var result = JSLINT(source);
-    renderJSLintResults(result);
-  };
+    Popup.methods.renderJSLintResults(result);
+  }
 
-  /*** METHODS ***/
+};
 
-  var getPageScripts = function(tab) {
-    tabUrl = tab.url;
-    tabId = tab.id;
-    chrome.tabs.sendRequest(tab.id, {action:'getScripts'}, onPageScriptsCallback);
-  };
 
-  var renderScriptUrls = function(urls) {
-    $(selectors.scriptTemplate).tmpl(urls).appendTo(selectors.scriptList);
-  };
+/*** METHODS ***/
 
-  var renderJSLintResults = function(result) {
-    // what does result===true imply here?
+Popup.methods = {
+
+  getPageScripts : function(tab) {
+    Popup.tab = tab;
+    chrome.tabs.sendRequest(tab.id, {action:'getScripts'}, Popup.callbacks.onPageScriptsCallback);
+  },
+
+  renderScriptUrls : function(urls) {
+    $(Popup.selectors.scriptTemplate).tmpl(urls).appendTo(Popup.selectors.scriptList);
+  },
+
+  renderJSLintResults : function(result) {
     if (result === true) { return; }
 
-    // $(selectors.resultsTemplate).tmpl(Utilities.cleanupJSLintResults(JSLINT.errors)).appendTo(selectors.resultsContainer);
-    $(selectors.resultsTemplate).tmpl(JSLINT.errors).appendTo(selectors.resultsContainer);
+    var results = Popup.utilities.cleanupJSLintResults(JSLINT.errors);
 
-    // switch to results tab
-    $(selectors.tabElement).tabs('navTo', selectors.resultsTab);
-  };
+    $(Popup.selectors.resultsTemplate).tmpl(results).appendTo(Popup.selectors.resultsContainer);
+    $(Popup.selectors.tabElement).tabs('navTo', Popup.selectors.resultsTab);
+  }
 
-  /*** SET EVENTS ***/
+};
 
-  $(selectors.buttonClose).click(onClosePopup);
-  $(selectors.scriptUrl).live('click', onScriptClicked);
+
+/*** UTILITIES ***/
+
+Popup.utilities = {
+
+  getBaseUrl: function(url) {
+    with ($.url.setUrl(url)) {
+      return attr('protocol') + '://' + (attr('host') || '');
+    }
+  },
+
+  getPagePath: function(url) {
+    return $.url.setUrl(tabUrl).attr('directory');
+  },
+
+
+  fixRelativeUrl: function(relativeUrl, tabUrl) {
+    var baseUrl = Popup.utilities.getBaseUrl(tabUrl);
+    var pagePath = Popup.utilities.getPagePath(tabUrl);
+
+    switch (true) {
+      case /^https?:\/\//.test(relativeUrl):
+        return relativeUrl;
+      case /^\/\//.test(relativeUrl):
+        return $.url.setUrl(tabUrl).attr('protocol') + ':' + relativeUrl;
+      case /^\//.test(relativeUrl):
+        return baseUrl + relativeUrl;
+      default:
+        return baseUrl + pagePath + relativeUrl;
+    }
+  },
+
+  htmlEncode: function(str) {
+    return str
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  },
+
+  cleanupJSLintResults: function(results) {
+    var ret = [];
+    $.each(results, function(i, item) {
+      if (item !== null) {
+        item.evidence = item.hasOwnProperty('evidence') ? Popup.utilities.htmlEncode(item.evidence) : '<none>';
+        ret.push(item);
+      }
+    });
+    return ret;
+  }
+
+}
+
+
+$(function() {
+
+  /*** SET DOM EVENTS ***/
+
+  $(Popup.selectors.buttonClose).click(Popup.onClosePopup);
+  $(Popup.selectors.scriptUrl).live('click', Popup.callbacks.onScriptClicked);
 
   /*** INITIALIZE ***/
   
-  var tabId, tabUrl;
-  $.ajaxSetup({ type:'GET', dataType:'text', success:onScriptBodyAjaxCallback });
-  $(selectors.tabElement).tabs();
-  chrome.tabs.getSelected(null, getPageScripts);
+  $.ajaxSetup({type:'GET', dataType:'text', success:Popup.callbacks.onScriptBodyAjaxCallback });
+  $(Popup.selectors.tabElement).tabs();
+  Popup.initialize();
 
 });
