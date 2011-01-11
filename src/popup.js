@@ -1,4 +1,3 @@
-
 $(function() {
 
   /*** ELEMENT SELECTORS ***/
@@ -60,11 +59,6 @@ $(function() {
   var tabId, tabUrl;
   $.ajaxSetup({ type:'GET', dataType:'text', success:onScriptBodyAjaxCallback });
   $(selectors.tabElement).tabs();
- // chrome.tabs.getSelected(null, getPageScripts);
+  chrome.tabs.getSelected(null, getPageScripts);
 
-})
-
-
-
-
-
+});
