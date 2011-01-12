@@ -48,7 +48,7 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 
 .ui-tab > ul > li.ui-nav > a {
   color: #888;
-  border-bottom: 3px solid #fff;
+  border-bottom: 2px solid #fff;
   display:block;
   padding: 5px 10px;
   text-decoration: none;
