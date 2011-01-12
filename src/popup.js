@@ -52,9 +52,9 @@ Popup.callbacks = {
   },
 
   onPageScriptsCallback : function(response) {
-    //  var urls = $.map(response.scripts, function(item) { return {url: Popup.utilities.fixRelativeUrl(item, Popup.tab.url)}; })
-    var urls = $.map(response.scripts, function(item) { return {url:item} });
-    Popup.methods.renderScriptUrls(urls);
+    var urls = $.map(response.scripts, function(item) { return {url: Popup.utilities.fixRelativeUrl(item, Popup.tab.url)}; })
+    var sorted = Popup.utilities.sortByHost(urls);
+    Popup.methods.renderScriptUrls(sorted);
   },
 
   onScriptBodyAjaxCallback : function(source) {
@@ -74,8 +74,14 @@ Popup.methods = {
     chrome.tabs.sendRequest(tab.id, {action:'getScripts'}, Popup.callbacks.onPageScriptsCallback);
   },
 
-  renderScriptUrls : function(urls) {
-    $(Popup.selectors.scriptTemplate).tmpl(urls).appendTo(Popup.selectors.scriptList);
+  renderScriptUrls : function(sorted) {
+
+    for (var host in sorted) {
+      $('<li>').addClass('script_host').html(host).appendTo(Popup.selectors.scriptList);
+      var urls = sorted[host];
+      $(Popup.selectors.scriptTemplate).tmpl(urls).appendTo(Popup.selectors.scriptList);
+    }
+
   },
 
   renderJSLintResults : function(result) {
@@ -94,16 +100,30 @@ Popup.methods = {
 
 Popup.utilities = {
 
+  sortByHost: function(urlArray) {
+    var $a = $('<a>');
+    var sorted = {};
+
+    $.each(urlArray, function(i,n) {
+      $a.attr('href', n.url);
+      var host = $a.get(0).host;
+      var path = $a.get(0).pathname;
+      if (sorted[host]) { sorted[host].push({url:n.url, path:path}); } 
+      else { sorted[host] = [{url:n.url, path:path}] }
+    });
+
+    return sorted;
+  },
+
   getBaseUrl: function(url) {
-    with ($.url.setUrl(url)) {
+   with ($.url.setUrl(url)) {
       return attr('protocol') + '://' + (attr('host') || '');
     }
   },
 
   getPagePath: function(url) {
-    return $.url.setUrl(tabUrl).attr('directory');
+    return $.url.setUrl(url).attr('directory');
   },
-
 
   fixRelativeUrl: function(relativeUrl, tabUrl) {
     var baseUrl = Popup.utilities.getBaseUrl(tabUrl);
@@ -145,7 +165,7 @@ $(function() {
 
   /*** SET DOM EVENTS ***/
 
-  $(Popup.selectors.buttonClose).click(Popup.onClosePopup);
+  $(Popup.selectors.buttonClose).click(Popup.callbacks.onClosePopup);
   $(Popup.selectors.scriptUrl).live('click', Popup.callbacks.onScriptClicked);
 
   /*** INITIALIZE ***/
