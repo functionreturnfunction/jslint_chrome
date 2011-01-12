@@ -107,9 +107,8 @@ Popup.utilities = {
     $.each(urlArray, function(i,n) {
       $a.attr('href', n.url);
       var host = $a.get(0).host;
-      var path = $a.get(0).pathname;
-      if (sorted[host]) { sorted[host].push({url:n.url, path:path}); } 
-      else { sorted[host] = [{url:n.url, path:path}] }
+      var val = {url: n.url, path: $a.get(0).pathname};
+      sorted[host] ? sorted[host].push(val) : sorted[host] = [val];
     });
 
     return sorted;
