@@ -149,6 +149,77 @@ test('.getPageScripts sets the popup tab and sends a request to the tab to get t
   Popup.tab = null;
 });
 
+test('.renderScriptUrls renders the sorted script urls by host using the script template', function() {
+  var sorted = {
+    'foo': 'bar'
+  };
+
+  jack(function() {
+    var li = jack.create('li', ['addClass', 'html', 'appendTo']);
+    var scriptTemplate = jack.create('scriptTemplate', ['tmpl', 'appendTo']);
+
+    jack.expect('$')
+      .withArguments('<li>')
+      .returnValue(li);
+    jack.expect('li.addClass')
+      .withArguments('script_host')
+      .returnValue(li);
+    jack.expect('li.html')
+      .withArguments('foo')
+      .returnValue(li)
+    jack.expect('li.appendTo')
+      .withArguments(Popup.selectors.scriptList);
+    jack.expect('$')
+      .withArguments(Popup.selectors.scriptTemplate)
+      .returnValue(scriptTemplate);
+    jack.expect('scriptTemplate.tmpl')
+      .withArguments('bar')
+      .returnValue(scriptTemplate);
+    jack.expect('scriptTemplate.appendTo')
+      .withArguments(Popup.selectors.scriptList);
+
+    Popup.methods.renderScriptUrls(sorted);
+  });
+});
+
+test('.renderJSLintResults renders the jslint errors collection and navigates to the results tab', function() {
+  var errors = new Object();
+  JSLINT.errors = errors;
+
+  jack(function() {
+    var resultsTemplate = jack.create('resultsTemplate', ['tmpl', 'appendTo']);
+    var tabElement = jack.create('tabElement', ['tabs']);
+
+    jack.expect('$')
+      .withArguments(Popup.selectors.resultsTemplate)
+      .returnValue(resultsTemplate);
+    jack.expect('Popup.utilities.cleanupJSLintResults')
+      .withArguments(errors)
+      .returnValue(errors);
+    jack.expect('resultsTemplate.tmpl')
+      .withArguments(errors)
+      .returnValue(resultsTemplate);
+    jack.expect('resultsTemplate.appendTo')
+      .withArguments(Popup.selectors.resultsContainer);
+    jack.expect('$')
+      .withArguments(Popup.selectors.tabElement)
+      .returnValue(tabElement);
+    jack.expect('tabElement.tabs')
+      .withArguments('navTo', Popup.selectors.resultsTab);
+
+    Popup.methods.renderJSLintResults(false);
+  });
+});
+
+test('.renderJSLintResults does not render if result is true', function() {
+  jack(function() {
+    jack.expect('$')
+      .never();
+
+    Popup.methods.renderJSLintResults(true);
+  });
+});
+
 // test('.getScripts sends a request to the given tab with the "getScripts" action and getScriptsCallback, and sets the tabId and tabUrl', function() {
 //   var tab = {
 //     id: 1234,

@@ -111,7 +111,6 @@ Popup.methods = {
   }
 };
 
-
 /*** UTILITIES ***/
 
 Popup.utilities = {
