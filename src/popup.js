@@ -69,9 +69,11 @@ Popup.callbacks = {
   },
 
   onPageScriptsCallback: function(response) {
-    var urls = $.map(response.scripts, function(item) { return {url: Popup.utilities.fixRelativeUrl(item, Popup.tab.url)}; })
-    var sorted = Popup.utilities.sortByHost(urls);
-    Popup.methods.renderScriptUrls(sorted);
+    Popup.methods.renderScriptUrls(
+      Popup.utilities.sortByHost(
+        $.map(response.scripts, function(item) {
+          return {url: Popup.utilities.fixRelativeUrl(item, Popup.tab.url)};
+        })));
   },
 
   onScriptBodyAjaxCallback: function(source) {

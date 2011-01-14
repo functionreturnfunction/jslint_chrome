@@ -79,6 +79,38 @@ test('.onScriptClicked prevents the default event handler and makes an ajax call
   });
 });
 
+test('.onPageScriptsCallback', function() {
+  var scripts = ['foo', 'bar'];
+  var altered = ['fooAltered', 'barAltered']
+  var sorted = new Object();
+  var response = {
+    scripts: scripts
+  };
+  var i = 0;
+  Popup.tab = {url: 'some url'};
+
+  jack(function() {
+    jack.expect('Popup.utilities.fixRelativeUrl')
+      .exactly(scripts.length + ' times')
+      .mock(function(item, url) {
+        equals(scripts[i], item);
+        equals(url, Popup.tab.url);
+        return altered[i++];
+      });
+    jack.expect('Popup.utilities.sortByHost')
+      .mock(function(args) {
+        equals(altered[0], args[0].url);
+        equals(altered[1], args[1].url);
+        return sorted;
+      });
+    jack.expect('Popup.methods.renderScriptUrls')
+      .mock(noop)
+      .withArguments(sorted);
+
+    Popup.callbacks.onPageScriptsCallback(response);
+  });
+});
+
 test('.onScriptBodyAjaxCallback renders the results from calling JSLINT on the given source', function() {
   var source = 'this is the source';
   var results = new Object();
@@ -94,6 +126,27 @@ test('.onScriptBodyAjaxCallback renders the results from calling JSLINT on the g
 
     Popup.callbacks.onScriptBodyAjaxCallback(source);
   });
+});
+
+module('Popup.methods');
+
+test('.getPageScripts sets the popup tab and sends a request to the tab to get the scripts from the page', function() {
+  Popup.tab = null;
+  var tab = {id: 1234};
+
+  jack(function() {
+    jack.expect('chrome.tabs.sendRequest')
+      .mock(function(id, args, callback) {
+        equals(id, tab.id);
+        equals(args.action, 'getScripts');
+        same(callback, Popup.callbacks.onPageScriptsCallback);
+      });
+
+    Popup.methods.getPageScripts(tab);
+  });
+
+  same(Popup.tab, tab);
+  Popup.tab = null;
 });
 
 // test('.getScripts sends a request to the given tab with the "getScripts" action and getScriptsCallback, and sets the tabId and tabUrl', function() {
