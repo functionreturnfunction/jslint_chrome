@@ -18,88 +18,101 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 var Popup = { 
-  initialize: function(e){ chrome.tabs.getSelected(null, Popup.methods.getPageScripts); },
+  /*** ELEMENT SELECTORS ***/
+
+  selectors: {
+    buttonClose: '#button_close',
+    tabElement: '#lint_tabs',
+    scriptTab: '#tab_scripts',
+    scriptList: '#script_urls',
+    scriptUrl: '#script_urls a',
+    scriptTemplate : '#script_url_tmpl',
+    resultsTab : '#tab_results',
+    resultsContainer : '#results',
+    resultsTemplate : '#jslint_error_tmpl'
+  },
+
+  /*** INITIALIZE ***/
+
+  initialize: function(e){
+    $.ajaxSetup({
+      type: 'GET',
+      dataType: 'text', 
+      success: Popup.callbacks.onScriptBodyAjaxCallback
+    });
+    $(Popup.selectors.tabElement).tabs();
+    chrome.tabs.getSelected(null, Popup.methods.getPageScripts);
+    Popup.initializeEvents();
+  },
+
+  /*** SET DOM EVENTS ***/
+
+  initializeEvents: function() {
+    $(Popup.selectors.buttonClose).click(Popup.callbacks.onClosePopup);
+    $(Popup.selectors.scriptUrl).live('click', Popup.callbacks.onScriptClicked);
+  },
+
   tab: null
-};
-
-
-/*** ELEMENT SELECTORS ***/
-
-Popup.selectors = {
-  buttonClose: '#button_close',
-  tabElement: '#lint_tabs',
-  scriptTab: '#tab_scripts',
-  scriptList: '#script_urls',
-  scriptUrl: '#script_urls a',
-  scriptTemplate : '#script_url_tmpl',
-  resultsTab : '#tab_results',
-  resultsContainer : '#results',
-  resultsTemplate : '#jslint_error_tmpl'
 };
 
 
 /*** EVENT HANDLERS ***/
 
 Popup.callbacks = {
-
-  onClosePopup : function(e) {
+  onClosePopup: function(e) {
     window.close();
   },
 
-  onScriptClicked : function(e) {
+  onScriptClicked: function(e) {
     e.preventDefault();
     $.ajax({url:$(this).attr('href')});
   },
 
-  onPageScriptsCallback : function(response) {
+  onPageScriptsCallback: function(response) {
     var urls = $.map(response.scripts, function(item) { return {url: Popup.utilities.fixRelativeUrl(item, Popup.tab.url)}; })
     var sorted = Popup.utilities.sortByHost(urls);
     Popup.methods.renderScriptUrls(sorted);
   },
 
-  onScriptBodyAjaxCallback : function(source) {
-    var result = JSLINT(source);
-    Popup.methods.renderJSLintResults(result);
+  onScriptBodyAjaxCallback: function(source) {
+    Popup.methods.renderJSLintResults(JSLINT(source));
   }
-
 };
-
 
 /*** METHODS ***/
 
 Popup.methods = {
-
   getPageScripts : function(tab) {
     Popup.tab = tab;
     chrome.tabs.sendRequest(tab.id, {action:'getScripts'}, Popup.callbacks.onPageScriptsCallback);
   },
 
   renderScriptUrls : function(sorted) {
-
     for (var host in sorted) {
-      $('<li>').addClass('script_host').html(host).appendTo(Popup.selectors.scriptList);
-      var urls = sorted[host];
-      $(Popup.selectors.scriptTemplate).tmpl(urls).appendTo(Popup.selectors.scriptList);
+      $('<li>')
+        .addClass('script_host')
+        .html(host)
+        .appendTo(Popup.selectors.scriptList);
+      $(Popup.selectors.scriptTemplate)
+        .tmpl(sorted[host])
+        .appendTo(Popup.selectors.scriptList);
     }
-
   },
 
   renderJSLintResults : function(result) {
     if (result === true) { return; }
 
-    var results = Popup.utilities.cleanupJSLintResults(JSLINT.errors);
-
-    $(Popup.selectors.resultsTemplate).tmpl(results).appendTo(Popup.selectors.resultsContainer);
+    $(Popup.selectors.resultsTemplate)
+      .tmpl(Popup.utilities.cleanupJSLintResults(JSLINT.errors))
+      .appendTo(Popup.selectors.resultsContainer);
     $(Popup.selectors.tabElement).tabs('navTo', Popup.selectors.resultsTab);
   }
-
 };
 
 
 /*** UTILITIES ***/
 
 Popup.utilities = {
-
   sortByHost: function(urlArray) {
     var $a = $('<a>');
     var sorted = {};
@@ -156,21 +169,4 @@ Popup.utilities = {
     });
     return ret;
   }
-
-}
-
-
-$(function() {
-
-  /*** SET DOM EVENTS ***/
-
-  $(Popup.selectors.buttonClose).click(Popup.callbacks.onClosePopup);
-  $(Popup.selectors.scriptUrl).live('click', Popup.callbacks.onScriptClicked);
-
-  /*** INITIALIZE ***/
-  
-  $.ajaxSetup({type:'GET', dataType:'text', success:Popup.callbacks.onScriptBodyAjaxCallback });
-  $(Popup.selectors.tabElement).tabs();
-  Popup.initialize();
-
-});
+};
