@@ -1,5 +1,6 @@
 require 'rake/clean'
 
+TEST_PAGE = 'test/unit/tests.html'
 CONTENT_DIRECTORY = 'content'
 SOURCE_DIRECTORY = 'src'
 LIBRARY_DIRECTORY = 'lib'
@@ -36,7 +37,6 @@ def build_script_file_with_listeners name, extra_call = nil
       infile.each {|line| outfile.puts(line) }
     end
     outfile.puts extra_call if !extra_call.nil?
-
   end
 end
 
@@ -45,7 +45,11 @@ file SCRIPT_OUTPUT[:content] => [OUTPUT_DIRECTORY] do
 end
 
 file SCRIPT_OUTPUT[:popup_js] => [OUTPUT_DIRECTORY] do
-  build_script_file_with_listeners :popup_js, ''
+  build_script_file_with_listeners :popup_js, 'Popup.initialize();'
 end
 
 task :build => [:clobber].concat(OUTPUT_FILES + SCRIPT_OUTPUT.values)
+
+task :test do
+  `google-chrome #{TEST_PAGE}`
+end

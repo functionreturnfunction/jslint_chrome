@@ -35,6 +35,8 @@ $.map = function(arr, fn) {
 
 $.ajax = noop;
 
+$.ajaxSetup = noop;
+
 $.url = {
   setUrl: noop
 };
