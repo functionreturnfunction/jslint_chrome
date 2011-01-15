@@ -1,8 +1,10 @@
 * Version 1.0
 ** TODO Display something when there are no results from running jslint on the chosen script
 ** TODO Display the script name at the top of the results panel
+** TODO Implement or temporarily remove the options panel
 ** TODO Implement some level of functional or integration testing
 ** TODO Determine best way to build the extension and minify/pack the js files (retaining header/copyright info)
 
 * Beyond 1.0
 ** TODO Handle file://urls better
+** TODO jslint options?
