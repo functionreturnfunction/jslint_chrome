@@ -155,9 +155,16 @@ test('.renderScriptUrls renders the sorted script urls by host using the script 
   };
 
   jack(function() {
+    var scriptList = jack.create('scriptList', ['html']);
     var li = jack.create('li', ['addClass', 'html', 'appendTo']);
     var scriptTemplate = jack.create('scriptTemplate', ['tmpl', 'appendTo']);
 
+    jack.expect('$')
+      .withArguments(Popup.selectors.scriptList)
+      .returnValue(scriptList);
+    jack.expect('scriptList.html')
+      .withArguments('')
+      .returnValue(scriptList);
     jack.expect('$')
       .withArguments('<li>')
       .returnValue(li);
@@ -168,7 +175,7 @@ test('.renderScriptUrls renders the sorted script urls by host using the script 
       .withArguments('foo')
       .returnValue(li)
     jack.expect('li.appendTo')
-      .withArguments(Popup.selectors.scriptList);
+      .withArguments(scriptList);
     jack.expect('$')
       .withArguments(Popup.selectors.scriptTemplate)
       .returnValue(scriptTemplate);
@@ -176,7 +183,7 @@ test('.renderScriptUrls renders the sorted script urls by host using the script 
       .withArguments('bar')
       .returnValue(scriptTemplate);
     jack.expect('scriptTemplate.appendTo')
-      .withArguments(Popup.selectors.scriptList);
+      .withArguments(scriptList);
 
     Popup.methods.renderScriptUrls(sorted);
   });

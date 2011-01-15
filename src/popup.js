@@ -89,14 +89,17 @@ Popup.methods = {
   },
 
   renderScriptUrls : function(sorted) {
+    var scriptList = $(Popup.selectors.scriptList)
+      .html('');
+
     for (var host in sorted) {
       $('<li>')
         .addClass('script_host')
         .html(host)
-        .appendTo(Popup.selectors.scriptList);
+        .appendTo(scriptList);
       $(Popup.selectors.scriptTemplate)
         .tmpl(sorted[host])
-        .appendTo(Popup.selectors.scriptList);
+        .appendTo(scriptList);
     }
   },
 
