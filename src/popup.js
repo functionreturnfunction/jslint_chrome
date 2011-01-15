@@ -121,11 +121,13 @@ Popup.utilities = {
     var sorted = {};
 
     $.each(urlArray, function(i,n) {
-      $a.attr('href', n.url);
-      var item = $a.get(0);
-      var host = item.host;
-      var val = {url: n.url, path: item.pathname};
-      sorted[host] ? sorted[host].push(val) : sorted[host] = [val];
+      if (n.url) {
+        $a.attr('href', n.url);
+        var item = $a.get(0);
+        var host = item.host;
+        var val = {url: n.url, path: item.pathname};
+        sorted[host] ? sorted[host].push(val) : sorted[host] = [val];
+      }
     });
 
     return sorted;
@@ -152,6 +154,8 @@ Popup.utilities = {
         return $.url.setUrl(tabUrl).attr('protocol') + ':' + relativeUrl;
       case /^\//.test(relativeUrl):
         return baseUrl + relativeUrl;
+      case /^(chrome-extension|file)/.test(relativeUrl):
+        return null;
       default:
         return baseUrl + (pagePath || '/') + relativeUrl;
     }

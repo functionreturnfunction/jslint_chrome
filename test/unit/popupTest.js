@@ -229,13 +229,15 @@ test('.renderJSLintResults does not render if result is true', function() {
 
 module('Popup.utilities');
 
-test('.sortByHost sorts the given url array by host name', function() {
+test('.sortByHost sorts the given url array by host name, skipping any null urls', function() {
   $ = jQuery;
   var urls = [
     {url: 'http://www.b-site.com'},
     {url: 'http://www.c-site.com/someApp/somePage.html'},
     {url: 'http://www.a-site.com'},
-    {url: 'http://www.a-site.com/someApp/somePage.html'}
+    {url: 'http://www.a-site.com/someApp/somePage.html'},
+    {url: null},
+    {url: null}
   ];
 
   var sorted = Popup.utilities.sortByHost(urls);
@@ -247,6 +249,14 @@ test('.sortByHost sorts the given url array by host name', function() {
   equals(sorted['www.b-site.com'][0].path, '/');
   equals(sorted['www.c-site.com'][0].url, 'http://www.c-site.com/someApp/somePage.html');
   equals(sorted['www.c-site.com'][0].path, '/someApp/somePage.html');
+
+  var i = 4;
+  for (var x in sorted) {
+    for (var j = sorted[x].length - 1; j >= 0; --j) {
+      --i;
+    }
+  }
+  equals(0, i);
 });
 
 test('.getBaseUrl returns protocol and host from the given url', function() {
@@ -303,6 +313,12 @@ test('.fixRelativeUrl determines and returns the fully-qualified path for the gi
   expected = baseUrl + pagePath + relativeUrl;
 
   equals(expected, Popup.utilities.fixRelativeUrl(relativeUrl, tabUrl));
+
+  // file url:
+  equals(null, Popup.utilities.fixRelativeUrl('file://asdf/fdsa'));
+
+  // chrome-extension url:
+  equals(null, Popup.utilities.fixRelativeUrl('chrome-extension://asdf/fdsa', tabUrl));
 });
 
 test('.htmlEncode html encodes the given string', function() {
