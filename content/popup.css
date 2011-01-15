@@ -23,7 +23,6 @@ body {
   min-width: 300px;
 }
 
-
 /*** HEADER ***/
 
 #header {
@@ -98,15 +97,11 @@ body {
 
 /*** OPTIONS TAB ***/
 
-
-
-
+.leftcolumn {
+  float: left;
+}
 
 /*** RESULTS TAB ***/
-
-#tab_results {
-  width: 750px;
-}
 
 #results .code {
   font-family: monospace;
@@ -119,3 +114,8 @@ body {
   background-color: white;
 }
 
+/*** ALL TABS ***/
+
+#tab_results, #tab_options {
+  width: 750px;
+}
