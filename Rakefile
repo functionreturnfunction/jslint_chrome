@@ -41,7 +41,7 @@ def build_script_file_with_listeners name, extra_call = nil
 end
 
 file SCRIPT_OUTPUT[:content] => [OUTPUT_DIRECTORY] do
-  build_script_file_with_listeners :content, 'initialize();'
+  build_script_file_with_listeners :content, 'Content.initialize();'
 end
 
 file SCRIPT_OUTPUT[:popup_js] => [OUTPUT_DIRECTORY] do

@@ -17,9 +17,8 @@ You should have received a copy of the GNU General Public License along with the
 JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var Popup = { 
+var Popup = {
   /*** ELEMENT SELECTORS ***/
-
   selectors: {
     buttonClose: '#button_close',
     tabElement: '#lint_tabs',
