@@ -97,8 +97,13 @@ body {
 
 /*** OPTIONS TAB ***/
 
-.leftcolumn {
+.rightcolumn, .leftcolumn {
   float: left;
+  width: 350px;
+}
+
+.leftcolumn {
+  clear: left;
 }
 
 /*** RESULTS TAB ***/
