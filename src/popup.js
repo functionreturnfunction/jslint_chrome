@@ -120,8 +120,9 @@ Popup.utilities = {
 
     $.each(urlArray, function(i,n) {
       $a.attr('href', n.url);
-      var host = $a.get(0).host;
-      var val = {url: n.url, path: $a.get(0).pathname};
+      var item = $a.get(0);
+      var host = item.host;
+      var val = {url: n.url, path: item.pathname};
       sorted[host] ? sorted[host].push(val) : sorted[host] = [val];
     });
 
@@ -150,7 +151,7 @@ Popup.utilities = {
       case /^\//.test(relativeUrl):
         return baseUrl + relativeUrl;
       default:
-        return baseUrl + pagePath + relativeUrl;
+        return baseUrl + (pagePath || '/') + relativeUrl;
     }
   },
 
@@ -164,7 +165,8 @@ Popup.utilities = {
     var ret = [];
     $.each(results, function(i, item) {
       if (item !== null) {
-        item.evidence = item.hasOwnProperty('evidence') ? Popup.utilities.htmlEncode(item.evidence) : '<none>';
+        item.evidence = item.hasOwnProperty('evidence') ?
+          Popup.utilities.htmlEncode(item.evidence) : '<none>';
         ret.push(item);
       }
     });

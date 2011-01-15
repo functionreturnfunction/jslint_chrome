@@ -17,15 +17,15 @@ var chrome = {
 
 var JSLINT = noop;
 
-var $ = noop;
+var $ = $ || noop;
 
-$.each = function(arr, fn) {
+$.each = $.each || function(arr, fn) {
   for (var i = 0, len = arr.length; i < len; ++i) {
     fn(i, arr[i]);
   }
 };
 
-$.map = function(arr, fn) {
+$.map = $.map || function(arr, fn) {
   var ret = [];
   $.each(arr, function(i, item) {
     ret.push(fn(item, i));
@@ -33,10 +33,10 @@ $.map = function(arr, fn) {
   return ret;
 }
 
-$.ajax = noop;
+$.ajax = $.ajax || noop;
 
-$.ajaxSetup = noop;
+$.ajaxSetup = $.ajaxSetup || noop;
 
-$.url = {
+$.url = $.url || {
   setUrl: noop
 };
