@@ -104,10 +104,14 @@ body {
 
 /*** RESULTS TAB ***/
 
+#tab_results {
+  width: 750px;
+}
+
 #results .code {
   font-family: monospace;
   font-size: 12px;
-  width: 82em;
+  max-width: 700px;
   margin: 0 1em;
   border: 1px solid black;
   padding: 5px;
