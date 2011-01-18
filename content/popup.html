@@ -37,7 +37,7 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
 
         <ul>
           <li><a href="#tab_scripts">Scripts</a></li>
-          <li><a href="#tab_options">Options</a></li>
+<!--          <li><a href="#tab_options">Options</a></li> -->
           <li><a href="#tab_results">Results</a></li>
         </ul>
 
@@ -47,9 +47,11 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
           </ul>
         </div> <!--tab_scripts -->
  
+<!--        
         <div id="tab_options">
           Options
-        </div> <!--tab_options -->
+        </div>
+--> <!--tab_options -->
 
         <div id="tab_results">
           <div id="results"></div>
@@ -64,10 +66,10 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
     </script>
 
     <script type="text/x-jquery-tmpl" id="jslint_error_tmpl">
-      <div>
-        Problem at line ${line}, character ${character}<br />
-        Issue: ${reason}<br />
-        Source: <div class="code">${evidence}</div><br />
+      <div class="lint_result">
+        Problem at <span class="line">line ${line}, character ${character}</span><br />
+        Issue: <span class="reason">${reason}</span><br />
+        <div class="code">${evidence}</div><br />
       </div>
     </script>
 
