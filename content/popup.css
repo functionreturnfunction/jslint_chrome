@@ -110,12 +110,14 @@ body {
 
 #results .code {
   font-family: monospace;
-  font-size: 12px;
   max-width: 700px;
   margin: 0 1em;
-  border: 1px solid black;
+  background: #f2f2f2;
+  border: 1px solid #CCC;
   padding: 5px;
   overflow-x: auto;
-  background-color: white;
 }
 
+#results .lint_result { font-size: 12px; line-height: 1.5em; margin-bottom:2em;}
+#results .lint_result .line { color: #A00; font-weight:800; }
+#results .lint_result .reason {  color: #A00; font-weight:800;}

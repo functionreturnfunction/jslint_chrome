@@ -52,7 +52,7 @@ JSLint Extension for Google Chrome.  If not, see <http://www.gnu.org/licenses/>.
   display:block;
   padding: 5px 10px;
   text-decoration: none;
-  -webkit-transition: all .2s linear;
+  -webkit-transition: all .1s linear;
 }
 
 .ui-tab > ul > li.ui-nav > a:hover {
