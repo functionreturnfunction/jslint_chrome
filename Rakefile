@@ -16,6 +16,7 @@ SCRIPT_INPUT = SPECIAL_SCRIPTS \
 SCRIPT_OUTPUT = SPECIAL_SCRIPTS \
   .inject({}) {|memo, arr| memo[arr[0]] = "#{OUTPUT_DIRECTORY}/#{arr[1]}"; memo}
 SCRIPTS = FileList["#{SOURCE_DIRECTORY}/*"].exclude *(SCRIPT_INPUT.values)
+RELEASE_FILE = "#{OUTPUT_DIRECTORY}/release-#{Time.now.strftime('%Y-%m-%d-%H%M')}.zip"
 
 SOURCE_FILES = LIBRARIES + FILES + SCRIPTS
 
@@ -52,4 +53,22 @@ task :build => [:clobber].concat(OUTPUT_FILES + SCRIPT_OUTPUT.values)
 
 task :test do
   `google-chrome #{TEST_PAGE}`
+end
+
+begin
+  require 'zip/zip'
+
+  namespace :build do
+    task :release => :build do
+      $stderr.puts "building release file #{RELEASE_FILE}"
+      Zip::ZipFile.open(RELEASE_FILE, 'w') do |zip|
+        FileList["#{OUTPUT_DIRECTORY}/**"].each do |file|
+          zip.add(file.sub("#{OUTPUT_DIRECTORY}/", ''), file)
+        end
+      end
+    end
+  end
+
+rescue LoadError
+  STDERR.puts 'Error loading ruby zip library.  Release will not be possible until the "rubyzip" gem is installed.'
 end
