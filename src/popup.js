@@ -106,9 +106,11 @@ Popup.methods = {
   renderJSLintResults : function(result) {
     if (result === true) { return; }
 
+    var resultsContainer = $(Popup.selectors.resultsContainer).html('');
+
     $(Popup.selectors.resultsTemplate)
       .tmpl(Popup.utilities.cleanupJSLintResults(JSLINT.errors))
-      .appendTo(Popup.selectors.resultsContainer);
+      .appendTo(resultsContainer);
     $(Popup.selectors.tabElement).tabs('navTo', Popup.selectors.resultsTab);
   }
 };

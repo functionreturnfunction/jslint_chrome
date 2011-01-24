@@ -189,14 +189,21 @@ test('.renderScriptUrls renders the sorted script urls by host using the script 
   });
 });
 
-test('.renderJSLintResults renders the jslint errors collection and navigates to the results tab', function() {
+test('.renderJSLintResults clears the results container, renders the jslint errors collection, and navigates to the results tab', function() {
   var errors = new Object();
   JSLINT.errors = errors;
 
   jack(function() {
+    var resultsContainer = jack.create('resultsContainer', ['html']);
     var resultsTemplate = jack.create('resultsTemplate', ['tmpl', 'appendTo']);
     var tabElement = jack.create('tabElement', ['tabs']);
 
+    jack.expect('$')
+      .withArguments(Popup.selectors.resultsContainer)
+      .returnValue(resultsContainer);
+    jack.expect('resultsContainer.html')
+      .withArguments('')
+      .returnValue(resultsContainer);
     jack.expect('$')
       .withArguments(Popup.selectors.resultsTemplate)
       .returnValue(resultsTemplate);
@@ -207,7 +214,7 @@ test('.renderJSLintResults renders the jslint errors collection and navigates to
       .withArguments(errors)
       .returnValue(resultsTemplate);
     jack.expect('resultsTemplate.appendTo')
-      .withArguments(Popup.selectors.resultsContainer);
+      .withArguments(resultsContainer);
     jack.expect('$')
       .withArguments(Popup.selectors.tabElement)
       .returnValue(tabElement);
