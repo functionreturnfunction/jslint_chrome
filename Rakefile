@@ -56,19 +56,23 @@ task :test do
 end
 
 begin
-  require 'zip/zip'
+  require './scripts/project_compressor'
 
   namespace :build do
     task :release => :build do
       $stderr.puts "building release file #{RELEASE_FILE}"
-      Zip::ZipFile.open(RELEASE_FILE, 'w') do |zip|
-        FileList["#{OUTPUT_DIRECTORY}/**"].each do |file|
-          zip.add(file.sub("#{OUTPUT_DIRECTORY}/", ''), file)
-        end
+      ProjectCompressor.compress do |project|
+        project.scripts ['jquery.js', 'jquery.url.js', 'jquery.tmpl.js',
+                         'jslint.js', {:compress => 'tabs.js'},
+                         {:compress => 'popup.js'}]
+        project.output_script 'jslint_chrome.js'
+        project.page 'popup.html'
+        project.directory 'output'
       end
     end
   end
 
-rescue LoadError
-  STDERR.puts 'Error loading ruby zip library.  Release will not be possible until the "rubyzip" gem is installed.'
+rescue LoadError => e
+  $stderr.puts 'There was a problem loading a required library.  Release building will not be possible until all required libraries are installed.'
+  $stderr.puts e
 end
