@@ -32,16 +32,18 @@ class ProjectCompressor
     validate_options
 
     File.open(fix_filename(@output_script), 'w') do |outfile|
-      @scripts.each do |script|
+      @scripts.map! do |script|
+        filename = nil
         if script.class == String
-          script = fix_filename script
-          add_file script, outfile
+          filename = fix_filename script
+          add_file filename, outfile
         elsif script[:compress]
-          script = fix_filename script[:compress]
-          compress_and_add_file script, outfile
+          script = script[:compress]
+          filename = fix_filename script
+          compress_and_add_file filename, outfile
         end
 
-        rm script
+        rm filename
         script
       end
       fix_page
