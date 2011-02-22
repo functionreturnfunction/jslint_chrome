@@ -1,6 +1,6 @@
 {
   "name": "JSLint for Google Chrome™",
-  "version": "1.1.1.1",
+  "version": "1.1.2",
   "description": "Implementation of Douglas Crockford's JSLint for script validation from within Google Chrome.",
   "icons": {
     "16": "icon16.png",
