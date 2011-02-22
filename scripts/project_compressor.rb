@@ -46,9 +46,10 @@ class ProjectCompressor
         rm filename
         script
       end
-      fix_page
-      compress_project
     end
+
+    fix_page
+    compress_project
   end
 
   class << self
